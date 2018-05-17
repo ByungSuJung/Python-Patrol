@@ -7,10 +7,10 @@ import pandas as pd
 #Latitude and logitude coordinates of downtown Seattle 
 place_point = (47.608013, -122.335167)
 graph = ox.graph_from_point(place_point, network_type='drive')
-fig, ax = ox.plot_graph(graph)
+#fig, ax = ox.plot_graph(graph)
 
 nodes, edges = ox.graph_to_gdfs(graph, nodes=True, edges=True)
 print(nodes.columns)
-print(nodes)
+print(nodes.geometry)
 print(edges.columns)
-print(edges)
+print(edges.maxspeed, edges.lanes, edges.length, edges.u, edges.v, edges.geometry)
