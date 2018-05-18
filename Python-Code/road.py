@@ -4,7 +4,7 @@ import queue as q
 class Road(object):
     def __init__(self, id, start, destination, max_speed, num_lanes, time_steps, length):
         # CONSTANTS
-        self.AVG_CAR_LENGTH = 4.6
+        self.AVG_CAR_LENGTH = 4.6       # meters
         
         self.id = id                    # float
         self.start = start              # Node u 
@@ -12,7 +12,7 @@ class Road(object):
         self.queue = q.Queue()          # Cars
         self.q_size = 0                 # int
         self.max_speed = max_speed      # int
-        self.time_steps = time_steps    # int
+        self.time_steps = time_steps    # int, This might need consideration
         self.num_lanes = num_lanes      # int
         self.length = length            # int
         self.calculate_capacity()       # int 
