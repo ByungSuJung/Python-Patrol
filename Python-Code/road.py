@@ -1,8 +1,7 @@
-import numpy as np
 import queue as q
 
 class Road(object):
-    def __init__(self, id, start, destination, max_speed, num_lanes, time_steps, length):
+    def __init__(self, id, start, destination, max_speed, num_lanes, length):
         # CONSTANTS
         self.AVG_CAR_LENGTH = 4.6       # meters
         self.ONE_TIME_STEP = 30         
@@ -10,13 +9,13 @@ class Road(object):
         self.id = id                    # float
         self.start = start              # Node u 
         self.destination = destination  # Node v
-        self.queue = q.Queue()          # Cars
-        self.q_size = 0                 # int
         self.max_speed = max_speed      # int
         self.num_lanes = num_lanes      # int
         self.length = length            # int
         self.calculate_time_steps()     # int (floor)
         self.calculate_capacity()       # int 
+        self.queue = q.Queue(maxsize=self.capacity)
+        self.q_size = 0
 
     def calculate_capacity(self): 
         # for now 
@@ -27,17 +26,17 @@ class Road(object):
         (int) (((self.length / self.max_speed) * 3600) / self.ONE_TIME_STEP) 
     
     def add(self, car):
-        self.queue.push(car)
+        self.queue.put_nowait(car)
         self.q_size += 1
         car.ts_on_current_position = 0 
 
     def remove(self, car): 
-        self.queue.pop()
+        self.queue.get_nowait()
         self.q_size -= 1
         car.ts_on_current_position = 0 
 
 if __name__ == '__main__': 
-    myRoad = Road(0, 153426, 141414, 40, 2, 5, 2111)
+    myRoad = Road(0, 153426, 141414, 40, 2, 2111)
     print("id: ", myRoad.id)
     print("start: ", myRoad.start)
     print("destination: ", myRoad.destination)
