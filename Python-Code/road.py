@@ -30,7 +30,7 @@ class Road(object):
         self.q_size += 1
         car.ts_on_current_position = 0 
 
-    def remove(self, car): 
+    def remove(self): 
         self.queue.get_nowait()
         self.q_size -= 1
         car.ts_on_current_position = 0 
