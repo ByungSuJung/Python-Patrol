@@ -49,6 +49,8 @@ def update(cars):
     plt.pause(1)
     
 
-def show():
+def init(nodes,edges,cars):
+    drawMap(nodes,edges)
+    drawCars(cars)
     plt.ion()
     plt.show()
