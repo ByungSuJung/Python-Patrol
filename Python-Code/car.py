@@ -1,11 +1,15 @@
+from road import Road as edge
+from node import node as node 
+
 class Car(object):
-	def __init__(self, start, destination):
+	def __init__(self, start, destination, path=None):
         self.current_position = start
         self.destination = destination 
         self.next_to_visit
         self.ts_on_current_position = 0
         self.total_times_for_car = 0
-        # self.queue or list_path to update for normal_move 
+        # self.queue or list_path to update for normal_move
+        self.path = path  
     
     # move for normal disjktra, require list of shortest path node and edges
     def normal_move(self):
