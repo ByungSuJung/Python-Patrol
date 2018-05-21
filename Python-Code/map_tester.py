@@ -14,4 +14,4 @@ node_data = nodes.values
 edge_data = edges.values
 
 #in this case, node x,y is at [3,4]
-print(node_data[:,[3,4]].astype(np.float64))
+#print(node_data[:,[3,4]].astype(np.float64))
