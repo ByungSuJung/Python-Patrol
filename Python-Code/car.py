@@ -1,5 +1,5 @@
-from road import Road as edge
-from node import node as node 
+from road import Road as road
+from intersection import Intersection as intersection 
 
 class Car(object):
 	def __init__(self, start, destination, path=None):
@@ -8,7 +8,7 @@ class Car(object):
         self.next_to_visit
         self.ts_on_current_position = 0
         self.total_times_for_car = 0
-        self.path = path # list of nodes 
+        self.path = path # list of nodes from start to destination
         self.visited = False
  
     def update(self): 
@@ -20,7 +20,7 @@ class Car(object):
     # move for normal and modified dijkstra 
     def move(self):
         if self.ts_on_current_position == self.current_position.time_steps: 
-            if type(self.current_position) is Node: 
+            if type(self.current_position) is intersection: 
                 can_move = self.try_move_from_node()
                 if can_move:
                     self.current_position.remove()
@@ -50,7 +50,7 @@ class Car(object):
     """
     def modified_move(self): 
         if self.ts_on_current_position == self.current_position.time_steps: 
-            if type(self.current_position) is Node:
+            if type(self.current_position) is intersection:
                 can_move = self.try_move_from_node()
                 if can_move: 
                     self.current_position.remove()
