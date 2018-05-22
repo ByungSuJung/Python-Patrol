@@ -1,4 +1,4 @@
-import queue as q
+
 
 class Road(object):
     def __init__(self, id, start, destination, max_speed, num_lanes, length):
@@ -14,7 +14,7 @@ class Road(object):
         self.length = length            # int
         self.calculate_time_steps()     # int (floor)
         self.calculate_capacity()       # int 
-        self.queue = q.Queue(maxsize=self.capacity)
+        self.queue = []
         self.q_size = 0
 
     def calculate_capacity(self): 
@@ -26,14 +26,17 @@ class Road(object):
         (int) (((self.length / self.max_speed) * 3600) / self.ONE_TIME_STEP) 
     
     def add(self, car):
-        self.queue.put_nowait(car)
+        self.queue.append(car)
         self.q_size += 1
         car.ts_on_current_position = 0 
 
     def remove(self): 
-        self.queue.get_nowait()
+        self.queue.pop(0)
         self.q_size -= 1
-        car.ts_on_current_position = 0 
+
+    def run(self): 
+        for car in self.queue: 
+            car.move()
 
 if __name__ == '__main__': 
     myRoad = Road(0, 153426, 141414, 40, 2, 2111)
