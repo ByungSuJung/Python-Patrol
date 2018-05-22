@@ -113,7 +113,7 @@ class node(object):
 			else:
 				print("You can't move")
 				return False
-
+"""
 #Testing area for this module
 if __name__ == '__main__': 
 	test = node("a", 1, 2)
@@ -133,3 +133,4 @@ if __name__ == '__main__':
 
 	plt.plot(x_vals, y_vals, 'o')
 	#plt.show()
+	"""

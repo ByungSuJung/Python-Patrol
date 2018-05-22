@@ -34,7 +34,7 @@ class Road(object):
         self.queue.get_nowait()
         self.q_size -= 1
         car.ts_on_current_position = 0 
-
+"""
 if __name__ == '__main__': 
     myRoad = Road(0, 153426, 141414, 40, 2, 2111)
     print("id: ", myRoad.id)
@@ -47,3 +47,4 @@ if __name__ == '__main__':
     print("num_lanes: ", myRoad.num_lanes)
     print("length: ", myRoad.length)
     print("capcity: ", myRoad.capacity)
+    """
