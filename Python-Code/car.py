@@ -1,8 +1,8 @@
 from road import Road as edge
-from node import node as node 
+from node import Node as node 
 
 class Car(object):
-	def __init__(self, start, destination, path=None):
+    def __init__(self, start, destination, path=None):
         self.current_position = start
         self.destination = destination 
         self.next_to_visit
@@ -19,7 +19,7 @@ class Car(object):
                 self.current_position.remove()
                 self.next_to_visit.add(self)
                 self.current_position = self.next_to_visit
-                self.next_to_visit = # next from given list of path
+                #self.next_to_visit = # next from given list of path
             else: 
                 pass
         else: 
@@ -35,7 +35,7 @@ class Car(object):
                     self.current_position.remove()
                     self.next_to_visit.add(self)
                     self.current_position = self.next_to_visit
-                    self.next_to_visit = # now on edge so next node 
+                    #self.next_to_visit = # now on edge so next node 
                 else: 
                     pass
             else: #on edge
@@ -44,8 +44,9 @@ class Car(object):
                     self.current_position.queue.remove()
                     self.next_to_visit.add(self)
                     self.current_position = self.next_to_visit
-                    self.next_to_visit = # now on node so next edge
+                    #self.next_to_visit = # now on node so next edge
                 else: 
+                    pass
                     # change all the car in edge.queue become False 
                     # should I do this just going through all the cars
                     # in the queue? pop pushback pop pushback ?   

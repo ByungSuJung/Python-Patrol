@@ -2,7 +2,7 @@ import numpy as np
 import sys
 import matplotlib.pyplot as plt
 
-class node(object):
+class Node(object):
 	def __init__(self, name, x, y):
 		self.id = name								#int - Unique identifier for this node
 		self.x = x 									#int - X coordinate on the map

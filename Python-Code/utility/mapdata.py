@@ -19,7 +19,7 @@ def retreiveMap(**kwargs):
     place = None
     distance = 1000
     from_file = False
-    file_name = None
+    filename = None
     savefile = False
     if 'savefile' in kwargs:
         savefile = kwargs['savefile']
@@ -29,12 +29,11 @@ def retreiveMap(**kwargs):
         distance = kwargs['distance']
     if 'fromfile' in kwargs:
         from_file = kwargs['fromfile']
-    if 'file_name' in kwargs:
-        file_name = kwargs['filename']
+    if 'filename' in kwargs:
+        filename = kwargs['filename']
     #- filename is a tuple of nodes and edges
     if from_file:
         return _readFile(filename)
-
     graph = ox.graph_from_point(place,network_type='drive',distance=distance)
     nodes, edges = ox.graph_to_gdfs(graph)
 
@@ -42,7 +41,7 @@ def retreiveMap(**kwargs):
     x_index = nodes.columns.get_loc('x')
     y_index = nodes.columns.get_loc('y')
 
-    nodes_data = nodes.values[:,[id_index,x_index,y_index]].astype(np.float32)
+    nodes_data = nodes.values[:,[id_index,x_index,y_index]]
 
     #-id, lanes are list when road is 2-way
     id_index = edges.columns.get_loc('osmid')
