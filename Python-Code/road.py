@@ -4,11 +4,11 @@ class Road(object):
     def __init__(self, id, start, destination, max_speed, num_lanes, length):
         # CONSTANTS
         self.AVG_CAR_LENGTH = 4.6       # meters
-        self.ONE_TIME_STEP = 30         
+        self.ONE_TIME_STEP = 0.3         
 
         self.id = id                    # float
-        self.start = start              # Node u 
-        self.destination = destination  # Node v
+        self.u = start              # Node u 
+        self.v = destination  # Node v
         self.max_speed = max_speed      # int
         self.num_lanes = num_lanes      # int
         self.length = length            # int
@@ -16,7 +16,10 @@ class Road(object):
         self.calculate_capacity()       # int 
         self.queue = q.Queue(maxsize=self.capacity)
         self.q_size = 0
-
+    def __hash__(self):
+        return hash(str(self))
+    def __str__(self):
+        return str(self.id)
     def calculate_capacity(self): 
         # for now 
         self.capacity = (self.num_lanes * self.length) / self.AVG_CAR_LENGTH

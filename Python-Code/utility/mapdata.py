@@ -56,7 +56,7 @@ def retreiveMap(**kwargs):
     edges_data = edges.values[:,[id_index,u_index,v_index,length_index,\
             speed_index,oneway_index,lanes_index]]
     if savefile:
-        if filename is not None or len(filename) is not 2:
+        if filename is not None and len(filename) is not 2:
             if len(filename) is not 2:
                 print('Value error in retreiveMap, should have 2 filenames!, saving as default ... ')
             np.save(filename[0],nodes_data)
