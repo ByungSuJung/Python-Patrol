@@ -2,7 +2,7 @@ import numpy as np
 import sys
 import matplotlib.pyplot as plt
 
-class node(object):
+class Node(object):
 	def __init__(self, name, x, y):
 		self.id = name								#int - Unique identifier for this node
 		self.x = x 									#int - X coordinate on the map
@@ -16,15 +16,16 @@ class node(object):
 		self.visted = False							#bool - Used for dijkstra's shortest path
 		self.value = sys.maxsize					#int - Used for dijkstra's shortest path
 		self.trail = None							#List - The list of nodes in the shortest path
-
+        
+	def __hash__(self):
+            return hash(str(self))
+	def __str__(self):
+	    return str(self.id)+str(self.x)+str(self.y)
 	def add_edge(self, edge):
-		self.edges.append(edge)						#Add the edge to list of edges
+		self.edge_list.append(str(edge))						#Add the edge to list of edges
 
-		#Determine which node your neighbor is
-		neighbor_node = edge.start if self.id \
-		!= edge.start.id else edge.destination
 
-		self.neighbor_nodes.append(neighbor_node)	#Add the node to your neighbor list
+		#self.neighbor_nodes.append(neighbor_node)	#Add the node to your neighbor list
 
 	def add(self, car):
 		if(len(self.queue) + 1 <= self.cap):
@@ -133,4 +134,7 @@ if __name__ == '__main__':
 
 	plt.plot(x_vals, y_vals, 'o')
 	#plt.show()
+<<<<<<< HEAD
 	"""
+=======
+>>>>>>> 9be1d40b673c6e25377e242be1e0dd18161a59b2
