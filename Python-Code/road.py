@@ -16,6 +16,7 @@ class Road(object):
         self.calculate_capacity()       # int 
         self.queue = q.Queue(maxsize=self.capacity)
         self.q_size = 0
+
     def __hash__(self):
         return hash(str(self))
     def __str__(self):
@@ -34,7 +35,7 @@ class Road(object):
         car.ts_on_current_position = 0 
 
     def remove(self): 
-        self.queue.get_nowait()
+        car = self.queue.get_nowait()
         self.q_size -= 1
         car.ts_on_current_position = 0 
 """

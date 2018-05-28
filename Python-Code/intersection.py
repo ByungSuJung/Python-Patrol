@@ -1,6 +1,7 @@
 import numpy as np
 import sys
 import matplotlib.pyplot as plt
+from Queue import PriorityQueue
 
 class Intersection(object):
 	def __init__(self, name, x, y):
@@ -12,10 +13,13 @@ class Intersection(object):
 		self.edge_list = [] 						#List - List of connected edges
 		self.neighbor_nodes = []					#List - List of neighboring nodes
 		self.cap = len(self.edge_list)				#int - Allowed size of queue
-		self.ts = 2									#int - Number of time steps to pass through node
+		self.time_steps = 2									#int - Number of time steps to pass through node
 		self.visted = False							#bool - Used for dijkstra's shortest path
 		self.value = sys.maxsize					#int - Used for dijkstra's shortest path
-		self.trail = None							#List - The list of nodes in the shortest path
+		self.trail = []						#List - The list of nodes in the shortest path
+
+	def __cmp__(self, other): 
+		return self.value < other.value
 
 	def add_edge(self, edge):
 		self.edge_list.append(edge)						#Add the edge to list of edges
@@ -43,6 +47,7 @@ class Intersection(object):
 		for car in self.queue: 
 			car.move()
 
+
 	"""
 	def tick(self, modified):
 		for car in self.queue:						#Go through each item in the queue if you can and move accordingly
@@ -63,6 +68,37 @@ class Intersection(object):
 			car.total_ts += 1						#Keep track of the cars total time steps in transit
 	"""
 
+	def shortest_path(self, destination): 
+		self.priority_Q = PriorityQueue()
+		self.value = 0 
+		self.priority_Q.put_nowait(self)
+		current = self
+		while current != destination:
+			self.trail.append(current)
+			current.visited = True
+			current.relax_neighbors()
+			current = self.priority_Q.get_nowait(self)
+
+		if current == destination: 
+			self.trail.append(current)
+		else: 
+			pass 
+		return self.trail
+
+
+	def relax_neighbors(self):
+		for edge in self.edge_list: 
+			neighbor_node = edge.destination
+			if not neighbor_node.visted:
+				neighbor_node.value = edge.time_steps + neighbor_node.time_steps
+				self.priority_Q.put_nowait(self)
+			else: 
+				pass 
+	
+
+
+
+	"""
 	def shortest_path(self, all_nodes):
 		for car in self.queue:
 			self.value = 0						#Set starting destination distance to zero
@@ -85,7 +121,7 @@ class Intersection(object):
 
 			car.path = car.destination.trail
 			self.reset_nodes(all_nodes)
-
+	"""
 	def visit_node(self, node):
 		node.visted = True
 
