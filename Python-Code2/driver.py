@@ -1,19 +1,22 @@
 import osmnx as ox
 import networkx as nx 
 import numpy as np
+import random as rn 
 """
 from t_node import TNode #Change to Node 
 """
-from road import Road
+from road import Road 
+from car import Car
 
 class Driver:
-	def __init__(self, center_lat=47.608013, center_long=-122.335167, dist=500):
+	def __init__(self, center_lat=47.608013, center_long=-122.335167, \
+		dist=500, num_cars=10):
 		center_pt = (center_lat, center_long)
-		graph = ox.graph_from_point(center_pt, network_type='drive', distance=dist)
+		G = ox.graph_from_point(center_pt, network_type='drive', distance=dist)
 
 		edge_list = []
 		id = 0
-		for e in graph.edges(data=True):
+		for e in G.edges(data=True):
 			start = e[0]
 			destination = e[1]
 			tmp = e[2]['maxspeed']
@@ -23,27 +26,62 @@ class Driver:
 			#edge_to_insert = Road(id, start, destination, max_speed, num_lanes, length)
 			#edge_list.append = edge_to_insert
 			id+=1
-		#self.edge_map = edge_dict
+		self.edge_map = edge_list
 
 		node_dict = {}
-		for n in graph.nodes(data=True):
+		for n in G.nodes(data=True):
 			name = n[1]['osmid']
 			x = n[1]['x']
 			y = n[1]['y']
-			outgoing_edges = []
-			incoming_edges = []
-			accsessible_nodes = []
+			outgoing_edges = [] #edges leaving this current node
+			incoming_edges = [] #edges arriving to this current node
+			incoming_lanes = 0  
+			accsessible_nodes = [] #nodes that can be accessesed from this node
+			 
 			for e in edge_list:
 				if e.u == name:
 					outgoing_edges.append(e.id)
 					accsessible_nodes.append(e.v)
 				if e.v == name:
 					incoming_edges.append(e.id)
-
-		
+					incoming_lanes += e.num_lanes
 			#node_to_insert = TNode()
 			#node_dict[n['osmid']] = node_to_insert
 		self.node_map = node_dict
+
+
+		car_list = []
+		for c in range(num_cars):
+			"""
+			if rand node is full:
+			Option A 
+			init car on a diff node 
+			option B
+			init car on on next t-frame
+			option C
+			init car on road
+			"""
+			start = rn.choice(node_dict.keys())
+
+
+			destination = rn.choice(node_dict.keys())
+			"""
+			if destination == start:
+				then what???
+			"""
+			path = 
+
+			Car()
+		
+
+
+		
+
+
+
+
+		self.car_map = car_list
+
 		
 
 
