@@ -1,10 +1,12 @@
+from queue import PriorityQueue
 import numpy as np
 import sys
 import matplotlib.pyplot as plt
-from Queue import PriorityQueue
+
 
 class Intersection(object):
-	def __init__(self, name, x, y):
+	def __init__(self, name, x, y, map=None):
+		self.map = map
 		self.id = name								#int - Unique identifier for this node
 		self.x = x 									#int - X coordinate on the map
 		self.y = y 									#int - Y coordinate on the map
@@ -13,7 +15,7 @@ class Intersection(object):
 		self.edge_list = [] 						#List - List of connected edges
 		self.neighbor_nodes = []					#List - List of neighboring nodes
 		self.cap = len(self.edge_list)				#int - Allowed size of queue
-		self.time_steps = 2									#int - Number of time steps to pass through node
+		self.time_steps = 2							#int - Number of time steps to pass through node
 		self.visted = False							#bool - Used for dijkstra's shortest path
 		self.value = sys.maxsize					#int - Used for dijkstra's shortest path
 		self.trail = []						#List - The list of nodes in the shortest path
@@ -77,12 +79,14 @@ class Intersection(object):
 			self.trail.append(current)
 			current.visited = True
 			current.relax_neighbors()
-			current = self.priority_Q.get_nowait(self)
+			current = self.priority_Q.get_nowait()
 
 		if current == destination: 
 			self.trail.append(current)
 		else: 
 			pass 
+
+		self.reset_nodes()
 		return self.trail
 
 
@@ -95,7 +99,11 @@ class Intersection(object):
 			else: 
 				pass 
 	
-
+	def reset_nodes(self):
+		for node in self.map.node_list:
+			node.visted = False
+			node.value = sys.maxsize
+			node.trail = []
 
 
 	"""
@@ -121,7 +129,7 @@ class Intersection(object):
 
 			car.path = car.destination.trail
 			self.reset_nodes(all_nodes)
-	"""
+	
 	def visit_node(self, node):
 		node.visted = True
 
@@ -140,11 +148,7 @@ class Intersection(object):
 					other_node.value = my_node.value + edge.length#Update the distance to that node
 					other_node.trail = my_node.trail.append(other_node)#Update where that distance came from
 
-	def reset_nodes(self, all_nodes):
-		for node in all_nodes:
-			node.visted = False
-			node.value = sys.maxsize
-			node.trail = None
+	
 
 	def modi_dijkstra(self, car):
 		decide = np.random.randint(0,2).astype(bool)
@@ -155,6 +159,7 @@ class Intersection(object):
 		else:
 			print("You can't move")
 			return False
+	"""
 
 #Testing area for this module
 if __name__ == '__main__': 
