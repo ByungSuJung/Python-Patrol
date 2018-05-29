@@ -2,34 +2,20 @@ from queue import PriorityQueue
 import numpy as np
 import sys
 import matplotlib.pyplot as plt
-<<<<<<< HEAD
-from queue import PriorityQueue
-
-class Intersection(object):
-	def __init__(self, name, x, y, e_list, n_list, e_sum):
-=======
 
 
 class Intersection(object):
 	def __init__(self, name, x, y, map=None):
 		self.map = map
->>>>>>> 230423544c7efe9c7ab96d3a531c53cef1480900
-		self.id = name								#int - Unique identifier for this node
-		self.x = x 									#int - X coordinate on the map
-		self.y = y 									#int - Y coordinate on the map
+		self.id = name #int - Unique identifier for this node
+		self.x = x #int - X coordinate on the map
+		self.y = y #int - Y coordinate on the map
 		self.queue = []								#Queue - Queue of Cars at this location
 		self.q_size = 0								#int - Current number of elements in the queue
-<<<<<<< HEAD
-		self.edge_list = e_list 						#List - List of connected edges
-		self.neighbor_nodes = n_list				#List - List of neighboring nodes
-		self.cap = e_sum				#int - Allowed size of queue
-		self.time_steps = 2									#int - Number of time steps to pass through node
-=======
-		self.edge_list = [] 						#List - List of connected edges
-		self.neighbor_nodes = []					#List - List of neighboring nodes
-		self.cap = len(self.edge_list)				#int - Allowed size of queue
+		self.edge_list = []					#List - List of connected edges
+		self.neighbor_nodes = []				#List - List of neighboring nodes
+		self.cap = 0			#int - Allowed size of queue
 		self.time_steps = 2							#int - Number of time steps to pass through node
->>>>>>> 230423544c7efe9c7ab96d3a531c53cef1480900
 		self.visted = False							#bool - Used for dijkstra's shortest path
 		self.value = sys.maxsize					#int - Used for dijkstra's shortest path
 		self.trail = []						#List - The list of nodes in the shortest path
@@ -41,8 +27,8 @@ class Intersection(object):
 		self.edge_list.append(edge)						#Add the edge to list of edges
 
 		#Determine which node your neighbor is
-		neighbor_node = edge.start if self.id \
-		!= edge.start.id else edge.destination
+		neighbor_node = edge.u if self.id \
+		!= edge.u.id else edge.v
 
 		self.neighbor_nodes.append(neighbor_node)	#Add the node to your neighbor list
 
@@ -106,7 +92,7 @@ class Intersection(object):
 
 	def relax_neighbors(self):
 		for edge in self.edge_list: 
-			neighbor_node = edge.destination
+			neighbor_node = edge.v
 			if not neighbor_node.visted:
 				neighbor_node.value = edge.time_steps + neighbor_node.time_steps
 				self.priority_Q.put_nowait(self)
@@ -123,12 +109,12 @@ class Intersection(object):
 	"""
 	def shortest_path(self, all_nodes):
 		for car in self.queue:
-			self.value = 0						#Set starting destination distance to zero
-			start.trail = str(start.id)			#Update the trail
+			self.value = 0						#Set uing destination distance to zero
+			u.trail = str(u.id)			#Update the trail
 			to_vist = all_nodes					#Copy list of all nodes into a list seperate list to visit
 
 			#Continue looking at each node until the destination has been visited
-			while(not car.destination.visted and len(to_vist) > 0):
+			while(not car.v.visted and len(to_vist) > 0):
 
 				#Sort the list in place by the node values, the values will be
 				#sorted from smallest to largest
@@ -141,7 +127,7 @@ class Intersection(object):
 				#Remove the front node from the to visit list since it has been visited
 				to_vist.pop(0)
 
-			car.path = car.destination.trail
+			car.path = car.v.trail
 			self.reset_nodes(all_nodes)
 	
 	def visit_node(self, node):

@@ -7,16 +7,44 @@ from road import Road
 from car import Car
 
 class Map:
+	"""
+
+	"""
 	def __init__(self, center_lat=47.608013, center_long=-122.335167, \
 		dist=500, num_cars=10):
+		"""
+
+		"""
 		center_pt = (center_lat, center_long)
 		G = ox.graph_from_point(center_pt, network_type='drive', distance=dist)
+		self.node_map = self.set_intersections(G) #dictionary of nodes
+		self.edge_map = self.set_roads(G, self.node_map) #dictionary of edges
+		self.add_edges(self.node_map, self.edge_map) #adds edges to nodes
+		self.car_map = self.set_cars(G, self.edge_map, \
+			self.node_map, num_cars) #list of cars 
+	
+	def set_intersections(self, G):
+		"""
 
+		"""
+		node_dict = {}
+		for n in G.nodes(data=True):
+			name = n[1]['osmid']
+			x = n[1]['x']
+			y = n[1]['y']
+			node_to_insert = Intersection(name, x, y)
+			node_dict[name] = node_to_insert
+		return node_dict
+
+	def set_roads(self, G, node_dict):
+		"""
+
+		"""
 		edge_dict = {}
 		id = 0
 		for e in G.edges(data=True):
-			start = e[0]
-			destination = e[1]
+			start = node_dict[e[0]]
+			destination = node_dict[e[1]]
 
 			if 'maxspeed' in e[2]:
 				tmp = e[2]['maxspeed']
@@ -41,33 +69,27 @@ class Map:
 				num_lanes, length)
 			edge_dict[id] = edge_to_insert
 			id+=1
-			
-		self.edge_map = edge_dict
+		return edge_dict
 
-		node_dict = {}
-		for n in G.nodes(data=True):
-			name = n[1]['osmid']
-			x = n[1]['x']
-			y = n[1]['y']
-			outgoing_edges = [] #edges leaving this current node
-			incoming_edges = [] #edges arriving to this current node
-			incoming_lanes = 0  
-			accsessible_nodes = [] #nodes that can be accessesed from this node
-			 
-			for e in edge_dict.values():
-				if e.u == name:
-					outgoing_edges.append(e.id)
-					accsessible_nodes.append(e.v)
-				if e.v == name:
-					incoming_edges.append(e.id)
-					incoming_lanes += e.num_lanes
+	def add_edges(self, node_dict, edge_dict):
+		#outgoing_edges = [] #edges leaving this current node
+		#incoming_edges = [] #edges arriving to this current node
+		#incoming_lanes = 0  
+		#accsessible_nodes = [] #nodes that can be accessesed from this node
+		for n in list(node_dict.values()): #list of intersection objs
+			for e in list(edge_dict.values()): #list of road objs
+				if e.u == n: #outgoing edge
+					n.add_edge(e)
+					#outgoing_edges.append(e) #List of road objs
+					#accsessible_nodes.append(e.v) #list of intersection ids
+				#if e.v == n:
+					#incoming_edges.append(e.id)
+					#incoming_lanes += e.num_lanes
 
-			node_to_insert = Intersection(name, x, y, outgoing_edges, \
-				accsessible_nodes, incoming_lanes)
-			node_dict[name] = node_to_insert
+	def set_cars(self, G, edge_dict, node_dict, num_cars):
+		"""
 
-		self.node_map = node_dict
-
+		"""
 		start = rn.choice(list(node_dict.values()))
 		destination = rn.choice(list(node_dict.values()))
 		#path = nx.dijkstra_path(G,start,destination)
@@ -93,8 +115,7 @@ class Map:
 			"""
 			#path = nx.dijkstra_path(G,start,destination)
 			car_list.append(Car(start, destination, path))
-
-		self.car_map = car_list
+		return car_list
 
 
 

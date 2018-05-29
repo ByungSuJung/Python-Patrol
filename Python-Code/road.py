@@ -3,17 +3,17 @@ import queue as q
 class Road(object):
     def __init__(self, id, start, destination, max_speed, num_lanes, length):
         # CONSTANTS
-        self.AVG_CAR_LENGTH = 4.6       # meters
-        self.ONE_TIME_STEP = 0.3         
+        self.AVG_CAR_LENGTH = 4.6 #meters, float
+        self.ONE_TIME_STEP = 0.3 #seconds????        
 
-        self.id = id                    # float
-        self.u = start              # Node u 
-        self.v = destination  # Node v
-        self.max_speed = max_speed      # int
-        self.num_lanes = num_lanes      # int
-        self.length = length      # int
-        self.calculate_time_steps()     # int (floor)
-        self.calculate_capacity()       # int 
+        self.id = id #int
+        self.u = start #Node u 
+        self.v = destination #Node v
+        self.max_speed = max_speed #mph, int
+        self.num_lanes = num_lanes #int
+        self.length = length #meters, float
+        self.calculate_time_steps() #int (floor)
+        self.calculate_capacity() #int 
         self.queue = q.Queue(maxsize=self.capacity)
         self.q_size = 0
 
