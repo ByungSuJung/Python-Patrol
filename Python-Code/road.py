@@ -16,6 +16,7 @@ class Road(object):
         self.calculate_capacity()       # int 
         self.queue = q.Queue(maxsize=self.capacity)
         self.q_size = 0
+        self.time = length/max_speed
     def __hash__(self):
         return hash(str(self))
     def __str__(self):
@@ -23,20 +24,25 @@ class Road(object):
     def calculate_capacity(self): 
         # for now 
         self.capacity = (self.num_lanes * self.length) / self.AVG_CAR_LENGTH
+        self.capacity=10
 
     def calculate_time_steps(self): 
         self.time_steps = \
         (int) (((self.length / self.max_speed) * 3600) / self.ONE_TIME_STEP) 
     
     def add(self, car):
-        self.queue.put_nowait(car)
-        self.q_size += 1
-        car.ts_on_current_position = 0 
+        if self.q_size + 1 <= self.capacity:
+            self.queue.put_nowait(car)
+            self.q_size += 1
+            car.ts_on_current_position = 0
+            return True
+        return False
+        
 
     def remove(self): 
         self.queue.get_nowait()
         self.q_size -= 1
-        car.ts_on_current_position = 0 
+        #car.ts_on_current_position = 0 
 
 if __name__ == '__main__': 
     myRoad = Road(0, 153426, 141414, 40, 2, 2111)

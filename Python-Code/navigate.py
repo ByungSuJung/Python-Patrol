@@ -16,6 +16,8 @@ def init(n,e,nk,ek):
     edge_keys = ek
 
 def dk(start,end,weight_on_length=1.0):
+    def _weight(time,length):
+        return time * 100 * (1-weight_on_length) + length * 100 * (weight_on_length)
     weights = {}
     used = {}
     paths = {}
@@ -45,18 +47,21 @@ def dk(start,end,weight_on_length=1.0):
             neighbor_nodes = [str(edges[ne].v) for ne in neighbor_edges]
             for i in range(len(neighbor_nodes)):
                 this_id = str(neighbor_nodes[i])
+                
+                    #- weight is set to be length
+                    # --- weight = edges[neighbor_edges[i]].length
+                weight = _weight(edges[neighbor_edges[i]].time,edges[neighbor_edges[i]].length)
+                    #- total weight is weight from last node + weight to next node
+                tot_weight = weights[cur] + weight
+                    #- if tot_weight < in the dict, overwrite
+                if tot_weight < weights[this_id]:
+                    weights[neighbor_nodes[i]] = tot_weight
+                        #- paths = original + this node
+                    paths[this_id] = copy.deepcopy(paths[cur])
+                    paths[this_id].append(neighbor_nodes[i])
+                    
                 if not used[this_id]:
                     tmp_run.append(this_id)
-                    #- weight is set to be length
-                    weight = edges[neighbor_edges[i]].length
-                    #- total weight is weight from last node + weight to next node
-                    tot_weight = weights[cur] + weight
-                    #- if tot_weight < in the dict, overwrite
-                    if tot_weight < weights[this_id]:
-                        weights[neighbor_nodes[i]] = tot_weight
-                        #- paths = original + this node
-                        paths[this_id] = copy.deepcopy(paths[cur])
-                        paths[this_id].append(neighbor_nodes[i])
             for nn in neighbor_nodes:
                 used[nn] = True
         last_run = tmp_run

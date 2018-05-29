@@ -11,26 +11,32 @@ class Intersection(object):
 		self.q_size = 0								#int - Current number of elements in the queue
 		self.edge_list = [] 						#List - List of connected edges
 		self.neighbor_nodes = []					#List - List of neighboring nodes
-		self.cap = len(self.edge_list)				#int - Allowed size of queue
+		#self.cap = len(self.edge_list)				#int - Allowed size of queue
+		self.cap = 0
 		self.ts = 2									#int - Number of time steps to pass through node
 		self.visted = False							#bool - Used for dijkstra's shortest path
 		self.value = sys.maxsize					#int - Used for dijkstra's shortest path
 		self.trail = None							#List - The list of nodes in the shortest path
 
+	def __hash__(self):
+            return hash(str(self))
+	def __str__(self):
+	    return str(self.id)+str(self.x)+str(self.y)
+	
 	def add_edge(self, edge):
 		self.edge_list.append(edge)						#Add the edge to list of edges
-
+                
+                
 		#Determine which node your neighbor is
-		neighbor_node = edge.start if self.id \
-		!= edge.start.id else edge.destination
+		#neighbor_node = edge.start if self.id != edge.start.id else edge.destination
 
-		self.neighbor_nodes.append(neighbor_node)	#Add the node to your neighbor list
+		#self.neighbor_nodes.append(neighbor_node)	#Add the node to your neighbor list
 
 	def add(self, car):
 		if(len(self.queue) + 1 <= self.cap):
 			self.queue.append(car)					#Place the car onto the queue
 			self.q_size += 1						#Properly track queue size
-			car.ts_on_obj = 0						#Reset the time on object for the car
+			car.ts_on_current_position = 0					#Reset the time on object for the car
 			return True
 
 		return False								#If it was not added to the queue return False
