@@ -22,8 +22,8 @@ class Intersection(object):
 		self.trail = []	
 		self.priority_Q = PriorityQueue()			#List - The list of nodes in the shortest path
 
-	def __cmp__(self, other): 
-		return self.value < other.value
+	def __lt__(self, other): 
+		return self.value <= other.value
 
 	def add_edge(self, edge, out=True):
 		if out == True:
@@ -77,36 +77,46 @@ class Intersection(object):
 	"""
 
 	def shortest_path(self, destination): 
-		#self.priority_Q = PriorityQueue()
 		self.value = 0 
-		self.priority_Q.put_nowait(self)
+		#self.priority_Q.put_nowait(self)
+		print("here")
 		current = self
+		current.trail.append(current)
 		while current != destination:
-			self.trail.append(current)
 			current.visited = True
 			current.relax_neighbors()
+			print("before first pop")
 			current = self.priority_Q.get_nowait()
+			print("after first pop")
 
-		if current == destination: 
+		"""if current == destination: 
+			current.trail = 
 			self.trail.append(current)
 		else: 
-			pass 
-
-		self.reset_nodes()
-		return self.trail
+			pass """
+		return current.trail
 
 
 	def relax_neighbors(self):
 		for edge in self.out_edges: 
+			print("relaxing")
 			neighbor_node = edge.v
-			if not neighbor_node.visted:
-				neighbor_node.value = edge.time_steps + neighbor_node.time_steps
-				self.priority_Q.put_nowait((self.value, neighbor_node))
+			temp_value = edge.time_steps + neighbor_node.time_steps
+			if not neighbor_node.visted and temp_value < neighbor_node.value:
+			#if temp_value < neighbor_node.value:
+				neighbor_node.value = temp_value
+				neighbor_node.trail = self.trail
+				neighbor_node.trail.append(neighbor_node)
+				#self.priority_Q.put_nowait((self.value, neighbor_node))
+				self.priority_Q.put_nowait(neighbor_node)
+				print("inside if")
 			else: 
+				print("inside else")
 				pass 
 	
 	def reset_nodes(self):
 		for node in self.map.node_list:
+			node.priority_Q = PriorityQueue()
 			node.visted = False
 			node.value = sys.maxsize
 			node.trail = []

@@ -11,7 +11,7 @@ class Map:
 
 	"""
 	def __init__(self, center_lat=47.608013, center_long=-122.335167, \
-		dist=150, num_cars=10):
+		dist=150, num_cars=1):
 		"""
 
 		"""
@@ -20,8 +20,7 @@ class Map:
 		self.node_map = self.set_intersections(G) #dictionary of nodes
 		self.edge_map = self.set_roads(G, self.node_map) #dictionary of edges
 		self.add_edges(self.node_map, self.edge_map) #adds edges to nodes
-		self.car_map = self.set_cars(G, self.edge_map, \
-			self.node_map, num_cars) #list of cars 
+		self.car_map = self.set_cars(G, self.edge_map, self.node_map, num_cars) #list of cars 
 	
 	def set_intersections(self, G):
 		"""
@@ -116,6 +115,3 @@ class Map:
 			#path = nx.dijkstra_path(G,start,destination)
 			car_list.append(Car(start, destination, path))
 		return car_list
-
-
-

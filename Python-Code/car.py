@@ -5,10 +5,10 @@ class Car(object):
     def __init__(self, start, destination, path=None):
         self.current_position = start
         self.destination = destination 
-        self.next_to_visit = path[0]
         self.ts_on_current_position = 0
         self.total_times_for_car = 0
         self.path = path # list of nodes from start to destination
+        self.next_to_visit = path[0]
         self.visited = False
     
     def update(self): 
@@ -76,7 +76,7 @@ class Car(object):
     """
     def try_move_from_node(self):
         # if total_times_for_car % 2 == 0: 
-        self.find_shortest_path()
+        #self.find_shortest_path()
         return self.try_move_from_edge()
     
     # This is same as self.try_move() I just made one for readability 
