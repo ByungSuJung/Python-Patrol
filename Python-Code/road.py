@@ -23,8 +23,8 @@ class Road(object):
         return str(self.id)
     def calculate_capacity(self): 
         # for now 
-        print("num_lanes", self.num_lanes)
-        print("length", self.length)
+        #print("num_lanes", self.num_lanes)
+        #print("length", self.length)
         self.capacity = (self.num_lanes*self.length) / self.AVG_CAR_LENGTH
 
     def calculate_time_steps(self): 

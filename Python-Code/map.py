@@ -72,19 +72,12 @@ class Map:
 		return edge_dict
 
 	def add_edges(self, node_dict, edge_dict):
-		#outgoing_edges = [] #edges leaving this current node
-		#incoming_edges = [] #edges arriving to this current node
-		#incoming_lanes = 0  
-		#accsessible_nodes = [] #nodes that can be accessesed from this node
 		for n in list(node_dict.values()): #list of intersection objs
 			for e in list(edge_dict.values()): #list of road objs
 				if e.u == n: #outgoing edge
 					n.add_edge(e)
-					#outgoing_edges.append(e) #List of road objs
-					#accsessible_nodes.append(e.v) #list of intersection ids
-				#if e.v == n:
-					#incoming_edges.append(e.id)
-					#incoming_lanes += e.num_lanes
+				if e.v == n: #incoming edge
+					n.add_edge(e, False)
 
 	def set_cars(self, G, edge_dict, node_dict, num_cars):
 		"""
