@@ -1,18 +1,18 @@
 import numpy as np
 import sys
 import matplotlib.pyplot as plt
-from Queue import PriorityQueue
+from queue import PriorityQueue
 
 class Intersection(object):
-	def __init__(self, name, x, y):
+	def __init__(self, name, x, y, e_list, n_list, e_sum):
 		self.id = name								#int - Unique identifier for this node
 		self.x = x 									#int - X coordinate on the map
 		self.y = y 									#int - Y coordinate on the map
 		self.queue = []								#Queue - Queue of Cars at this location
 		self.q_size = 0								#int - Current number of elements in the queue
-		self.edge_list = [] 						#List - List of connected edges
-		self.neighbor_nodes = []					#List - List of neighboring nodes
-		self.cap = len(self.edge_list)				#int - Allowed size of queue
+		self.edge_list = e_list 						#List - List of connected edges
+		self.neighbor_nodes = n_list				#List - List of neighboring nodes
+		self.cap = e_sum				#int - Allowed size of queue
 		self.time_steps = 2									#int - Number of time steps to pass through node
 		self.visted = False							#bool - Used for dijkstra's shortest path
 		self.value = sys.maxsize					#int - Used for dijkstra's shortest path

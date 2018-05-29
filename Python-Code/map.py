@@ -22,9 +22,11 @@ class Map:
 			max_speed = tmp.split(" ")[0]
 			num_lanes = e[2]['lanes'] 
 			length = e[2]['length'] 
-			#edge_to_insert = Road(id, start, destination, max_speed, num_lanes, length)
-			#edge_list.append = edge_to_insert
+			edge_to_insert = Road(id, start, destination, max_speed, \
+				num_lanes, length)
+			edge_dict[id] = edge_to_insert
 			id+=1
+			
 		self.edge_map = edge_dict
 
 		node_dict = {}
@@ -37,22 +39,26 @@ class Map:
 			incoming_lanes = 0  
 			accsessible_nodes = [] #nodes that can be accessesed from this node
 			 
-			for e in edge_list:
+			for e in edge_dict.values():
 				if e.u == name:
 					outgoing_edges.append(e.id)
 					accsessible_nodes.append(e.v)
 				if e.v == name:
 					incoming_edges.append(e.id)
 					incoming_lanes += e.num_lanes
-			#node_to_insert = TNode()
-			#node_dict[n['osmid']] = node_to_insert
+
+			node_to_insert = Intersection(name, x, y, outgoing_edges, \
+				accsessible_nodes, incoming_lanes)
+			node_dict[n['osmid']] = node_to_insert
+
 		self.node_map = node_dict
 
 		start = rn.choice(node_dict.keys())
 		destination = rn.choice(node_dict.keys())
-		path = nx.dijkstra_path(G,start,destination)
+		#path = nx.dijkstra_path(G,start,destination)
+		path = start.shortest_path(destination)
 		car_list = []
-		for c in range(num_cars):
+		for i in range(num_cars):
 			"""
 			if rand node is full:
 			Option A 
