@@ -2,9 +2,7 @@ import osmnx as ox
 import networkx as nx 
 import numpy as np
 import random as rn 
-"""
-from t_node import TNode #Change to Node 
-"""
+from intersection import Intersection
 from road import Road 
 from car import Car
 
@@ -49,7 +47,9 @@ class Driver:
 			#node_dict[n['osmid']] = node_to_insert
 		self.node_map = node_dict
 
-
+		start = rn.choice(node_dict.keys())
+		destination = rn.choice(node_dict.keys())
+		path = nx.dijkstra_path(G,start,destination)
 		car_list = []
 		for c in range(num_cars):
 			"""
@@ -59,33 +59,29 @@ class Driver:
 			option B
 			init car on on next t-frame
 			option C
-			init car on road
+			init car on nearest road obj where start node
+			would be either null or the closest edge
+
+			choosing option B 
 			"""
-			start = rn.choice(node_dict.keys())
-
-
-			destination = rn.choice(node_dict.keys())
+			#start = rn.choice(node_dict.keys())
+			#destination = rn.choice(node_dict.keys())
 			"""
 			if destination == start:
 				then what???
 			"""
-			path = 
-
-			Car()
-		
-
-
-		
-
-
-
+			#path = nx.dijkstra_path(G,start,destination)
+			car_list.append(Car(start, destination, path))
 
 		self.car_map = car_list
+"""
+Start the clock
+"""
+while car_list:
+	
 
-		
+	
 
-
-		car_dict = {}
 
 
     

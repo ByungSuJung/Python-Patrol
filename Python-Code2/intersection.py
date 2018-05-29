@@ -3,7 +3,7 @@ import sys
 import matplotlib.pyplot as plt
 
 class Intersection(object):
-	def __init__(self, name, x, y):
+	def __init__(self, name, x, y, ):
 		self.id = name								#int - Unique identifier for this node
 		self.x = x 									#int - X coordinate on the map
 		self.y = y 									#int - Y coordinate on the map
