@@ -11,7 +11,7 @@ class Map:
 
 	"""
 	def __init__(self, center_lat=47.608013, center_long=-122.335167, \
-		dist=500, num_cars=10):
+		dist=150, num_cars=10):
 		"""
 
 		"""

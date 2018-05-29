@@ -12,25 +12,31 @@ class Intersection(object):
 		self.y = y #int - Y coordinate on the map
 		self.queue = []								#Queue - Queue of Cars at this location
 		self.q_size = 0								#int - Current number of elements in the queue
-		self.edge_list = []					#List - List of connected edges
+		self.out_edges = []
+		self.in_edges = []					#List - List of connected edges
 		self.neighbor_nodes = []				#List - List of neighboring nodes
 		self.cap = 0			#int - Allowed size of queue
 		self.time_steps = 2							#int - Number of time steps to pass through node
 		self.visted = False							#bool - Used for dijkstra's shortest path
 		self.value = sys.maxsize					#int - Used for dijkstra's shortest path
-		self.trail = []						#List - The list of nodes in the shortest path
+		self.trail = []	
+		self.priority_Q = PriorityQueue()			#List - The list of nodes in the shortest path
 
 	def __cmp__(self, other): 
 		return self.value < other.value
 
-	def add_edge(self, edge):
-		self.edge_list.append(edge)						#Add the edge to list of edges
-
+	def add_edge(self, edge, out=True):
+		if out == True:
+			self.out_edges.append(edge)
+		else:
+			self.in_edges.append(edge)
+			self.cap += edge.num_lanes
+		
+		#Add the edge to list of edges
 		#Determine which node your neighbor is
 		neighbor_node = edge.u if self.id \
 		!= edge.u.id else edge.v
-
-		self.neighbor_nodes.append(neighbor_node)	#Add the node to your neighbor list
+		self.neighbor_nodes.append(neighbor_node)#Add the node to your neighbor list
 
 	def add(self, car):
 		if(len(self.queue) + 1 <= self.cap):
@@ -71,7 +77,7 @@ class Intersection(object):
 	"""
 
 	def shortest_path(self, destination): 
-		self.priority_Q = PriorityQueue()
+		#self.priority_Q = PriorityQueue()
 		self.value = 0 
 		self.priority_Q.put_nowait(self)
 		current = self
@@ -91,11 +97,11 @@ class Intersection(object):
 
 
 	def relax_neighbors(self):
-		for edge in self.edge_list: 
+		for edge in self.out_edges: 
 			neighbor_node = edge.v
 			if not neighbor_node.visted:
 				neighbor_node.value = edge.time_steps + neighbor_node.time_steps
-				self.priority_Q.put_nowait(self)
+				self.priority_Q.put_nowait((self.value, neighbor_node))
 			else: 
 				pass 
 	
@@ -134,7 +140,7 @@ class Intersection(object):
 		node.visted = True
 
 		#Edit each connected node to this current node
-		for edge in node.edge_list:
+		for edge in node.out_edges:
 
 			#Determine what node you are i.e. nodeA or nodeB
 			my_node = edge.nodeA if node.id == edge.nodeA.id else edge.nodeB
