@@ -1,4 +1,3 @@
-
 import osmnx as ox
 import networkx as nx 
 import numpy as np
@@ -18,10 +17,26 @@ class Map:
 		for e in G.edges(data=True):
 			start = e[0]
 			destination = e[1]
-			tmp = e[2]['maxspeed']
-			max_speed = tmp.split(" ")[0]
-			num_lanes = e[2]['lanes'] 
-			length = e[2]['length'] 
+
+			if 'maxspeed' in e[2]:
+				tmp = e[2]['maxspeed']
+				if type(tmp) is list:
+					max_speed = int(tmp[0].split(" ")[0])
+				else:
+					max_speed = int(tmp.split(" ")[0])
+			else:
+				max_speed = 25
+
+			if 'lanes' in e[2]:
+				tmp2 = e[2]['lanes']
+				if type(tmp2) is list:
+					num_lanes = int(tmp2[0])
+				else:
+					num_lanes = int(tmp2)
+			else:
+				num_lanes = 2
+
+			length = int(e[2]['length']) 
 			edge_to_insert = Road(id, start, destination, max_speed, \
 				num_lanes, length)
 			edge_dict[id] = edge_to_insert
@@ -49,12 +64,12 @@ class Map:
 
 			node_to_insert = Intersection(name, x, y, outgoing_edges, \
 				accsessible_nodes, incoming_lanes)
-			node_dict[n['osmid']] = node_to_insert
+			node_dict[name] = node_to_insert
 
 		self.node_map = node_dict
 
-		start = rn.choice(node_dict.keys())
-		destination = rn.choice(node_dict.keys())
+		start = rn.choice(list(node_dict.values()))
+		destination = rn.choice(list(node_dict.values()))
 		#path = nx.dijkstra_path(G,start,destination)
 		path = start.shortest_path(destination)
 		car_list = []
@@ -80,4 +95,6 @@ class Map:
 			car_list.append(Car(start, destination, path))
 
 		self.car_map = car_list
+
+
 

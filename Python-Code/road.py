@@ -11,7 +11,7 @@ class Road(object):
         self.v = destination  # Node v
         self.max_speed = max_speed      # int
         self.num_lanes = num_lanes      # int
-        self.length = length            # int
+        self.length = length      # int
         self.calculate_time_steps()     # int (floor)
         self.calculate_capacity()       # int 
         self.queue = q.Queue(maxsize=self.capacity)
@@ -23,7 +23,9 @@ class Road(object):
         return str(self.id)
     def calculate_capacity(self): 
         # for now 
-        self.capacity = (self.num_lanes * self.length) / self.AVG_CAR_LENGTH
+        print("num_lanes", self.num_lanes)
+        print("length", self.length)
+        self.capacity = (self.num_lanes*self.length) / self.AVG_CAR_LENGTH
 
     def calculate_time_steps(self): 
         self.time_steps = \
