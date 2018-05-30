@@ -16,8 +16,8 @@ def init(n,e,nk,ek):
     edge_keys = ek
 
 def dk(start,end,weight_on_length=1.0):
-    def _weight(time,length):
-        return time * 100 * (1-weight_on_length) + length * 100 * (weight_on_length)
+    def _weight(time,capacity):
+        return capacity * 100 * (1-weight_on_length) + time * 100 * (weight_on_length)
     weights = {}
     used = {}
     paths = {}
@@ -40,7 +40,7 @@ def dk(start,end,weight_on_length=1.0):
         #- sometimes error occured, this if statement just for avoiding errors
         if len(last_run) == 0:
             return False
-            
+
         #- run thru each nodes visited last cycle
         for cur in last_run:
             #neighbor_edges = nodes[str(cur)].edge_list
@@ -54,7 +54,7 @@ def dk(start,end,weight_on_length=1.0):
                 
                     #- weight is set to be length
                     # --- weight = edges[neighbor_edges[i]].length
-                weight = _weight(edges[neighbor_edges[i]].time,edges[neighbor_edges[i]].length)
+                weight = _weight(edges[neighbor_edges[i]].time,edges[neighbor_edges[i]].q_size/edges[neighbor_edges[i]].capacity)
                     #- total weight is weight from last node + weight to next node
                 tot_weight = weights[cur] + weight
                     #- if tot_weight < in the dict, overwrite

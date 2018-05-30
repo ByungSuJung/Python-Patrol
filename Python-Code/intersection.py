@@ -28,7 +28,6 @@ class Intersection(object):
 
 	def __str__(self):
 		return str(self.id)
-
 	def add_edge(self, edge, out=True):
 		self.edge_list.append(edge)
 		if str(edge.u) == str(self):
@@ -47,17 +46,19 @@ class Intersection(object):
 		#!= edge.u.id else edge.v
 		#self.neighbor_nodes.append(neighbor_node)#Add the node to your neighbor list
 
-	def add(self, car):
+	def add(self):
 		if(len(self.queue) + 1 <= self.cap):
-			self.queue.append(car)					#Place the car onto the queue
+			self.queue.append('car')					#Place the car onto the queue
 			self.q_size += 1						#Properly track queue size
-			car.ts_on_current_position = 1						#Reset the time on object for the car
+			#car.ts_on_current_position = 1						#Reset the time on object for the car
 			return True
 
 		return False								#If it was not added to the queue return False
 
 	def remove(self):
+		#print('before pop',len(self.queue),self.cap,self.id)
 		self.queue.pop()							#Remove the front car from the queue
+		#print('after pop',len(self.queue),self.cap,self.id)
 		self.q_size -= 1							#Properly track queue size
 
 	def run(self): 
