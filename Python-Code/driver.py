@@ -20,7 +20,7 @@ if __name__ == '__main__':
     nodes_file_path = 'map/nodes.npy'
     edges_file_path = 'map/edges.npy'
         
-    nodes, edges = util.retreiveMap(place=(47.608013, -122.335167),distance=400,savefile=True)
+    nodes, edges = util.retreiveMap(place=(47.608013, -122.335167),distance=350,savefile=False)
     #nodes, edges = util.retreiveMap(place=(37.7749, -122.4194),distance=1000,savefile=True)
 
     #- If files do not exist, un-comment the line above and comment 3 lines below
@@ -28,22 +28,34 @@ if __name__ == '__main__':
     #nodes, edges = util.retreiveMap(fromfile=True,filename=(nodes_file_path,edges_file_path))
     
     #- nodes and edges in dictionary form
+    edge_id_distributor=0
     nodes = util.node_to_object(nodes)
     edges = util.edge_to_object(edges)
+
+    #badnodes = ['418825595','53142970']
+    #rm_list = ['531678155', '425811432', '33294637199', '428248112']
+
+
+    del nodes['53221383']
+    new_edges = {}
+    for key,edge in edges.items():
+        id = str(edge_id_distributor)
+        edge_id_distributor+=1
+        u = str(edge.u)
+        v = str(edge.v)
+        if u in nodes and v in nodes:
+            #new_edges[id] = Road(id,nodes[u],nodes[v],edge.max_speed,edge.num_lanes,edge.length)
+            new_edges[id] = Road(id,nodes[u],nodes[v],40,4,200)
+            nodes[u].add_edge(new_edges[id])
+            nodes[v].add_edge(new_edges[id])
+            nodes[u].cap += 4
+            nodes[v].cap += 4
+    edges = new_edges
     
-    #add edges to nodes
-    for key, edge in edges.items():
-        edge.u = nodes[str(edge.u)]
-        edge.v = nodes[str(edge.v)]
-        nodes[str(edge.u)].add_edge(edge)
-        nodes[str(edge.u)].cap += edge.num_lanes
-        #nodes[str(edge.v)].add_edge(edge)
-        nodes[str(edge.v)].cap += edge.num_lanes
-    #- get seperate list of ids
+    
+
     node_key = list(nodes.keys())
     edge_key = list(edges.keys())
-    
-    #test_end = (nodes[node_key[339]].x,nodes[node_key[339]].y)
     
     #- initialize navigator
     nv.init(nodes,edges,node_key,edge_key)
@@ -55,58 +67,73 @@ if __name__ == '__main__':
     car_size = c.NUMBER_CARS
     
     #- pick random starts and ends
-    cars_u = np.random.randint(len(nodes),size=car_size)
-    cars_v = np.random.randint(len(nodes),size=car_size)
+    cars_u = np.random.randint(len(node_key),size=car_size)
+    cars_v = np.random.randint(len(node_key),size=car_size)
     cars =[]
     for i in range(car_size):
         st = nodes[node_key[cars_u[i]]]
-        while st.isFull():
-            n = np.random.randint(len(nodes))
-            while n == cars_v[i]:
-                n = np.random.randint(len(nodes))
-            st = nodes[node_key[n]]
-        cars.append(Car(st,nodes[node_key[cars_v[i]]]))
+        end = nodes[node_key[cars_v[i]]]
+
+        equal = True
+        while equal:
+            st = nodes[node_key[np.random.randint(len(nodes))]]
+            #end = nodes[node_key[np.random.randint(len(nodes))]]
+            while len(st.out_edges) == 0 or st.isFull():
+                st = nodes[node_key[np.random.randint(len(nodes))]]
+            while len(end.in_edges) == 0:
+                end = nodes[node_key[np.random.randint(len(nodes))]]
+            equal = st.id == end.id
+            print(st.id,end.id,equal)
+        cars.append(Car(st,end,modified=False))
         st.add()
     
+    startid = '53160863'
+    endid = '53114266'
+
+    print(edges['38'].u.id,edges['38'].v.id)
+    print(edges['19'].u.id,edges['19'].v.id)
+    print(edges['18'].u.id,edges['18'].v.id)
+    print(edges['17'].u.id,edges['17'].v.id)
+
+    
+
+    vis.drawPoint((nodes[startid].x,nodes[startid].y))
+    vis.drawPoint((nodes[endid].x,nodes[endid].y))
+
     #- have map and cars ready on plot
     vis.init_graph(nodes,edges,cars)
-    
+    plt.show()
+    quit()
     #- calculate shortest path for each car
     for car in cars:
-        paths = nv.dk(car.start.id,car.dest.id)
-        '''
-        test_start = [car.start.x,car.start.y]
-        test_end = [car.dest.x,car.dest.y]
-        plt.plot(test_end[0],test_end[1],color='red',linestyle='none',marker='o',markersize=10)
-        plt.plot(test_start[0],test_start[1],color='red',linestyle='none',marker='o',markersize=10)
-        '''
+        paths = nv.dk(car.start.id,car.dest.id,weight_on_length=1.0)
         #paths = car.start.shortest_path(car.dest)
-        while type(paths) is bool:
-            print('Re-routing')
-            #- when pair of starts and destinations do not work, get new destination
-            r_v = np.random.randint(len(nodes),size=2)
-            while r_v[0] == r_v[1]:
-                r_v = np.random.randint(len(nodes),size=2)
-            car.start=nodes[node_key[r_v[0]]]
-            car.dest = nodes[node_key[r_v[1]]]
-            paths = nv.dk(car.start.id,car.dest.id)
+        #while type(paths) is bool:
+        #    print('Re-routing')
+        #    #- when pair of starts and destinations do not work, get new destination
+        #   r_v = np.random.randint(len(nodes),size=2)
+        #    while r_v[0] == r_v[1]:
+        #        r_v = np.random.randint(len(nodes),size=2)
+        #    car.start=nodes[node_key[r_v[0]]]
+        #    paths = nv.dk(car.start.id,car.dest.id)
+        #    print(type(paths),car.start.id,car.dest.id)
         #- add paths to car object
-        #path_id = [p.id for p in paths]
-        #paths = nv._expand_path(path_id)
-        if len(paths) == 1:
-            print('length is 1')
         car.set_path(paths[1:])
-        for i in paths:
-            print(str(i))
-    
+
+    #vis.init_graph(nodes,edges,cars)
+
     counter=0
+    total_time = 0
     while len(cars) > 0:
         for car in cars:
             if car.current_position.id == car.dest.id:
                 counter+=1
                 nodes[car.current_position.id].remove()
+                print('{1},{0} to {3},{2}'.format(car.start.x,car.start.y,car.dest.x,car.dest.y),car.total_ts)
                 cars.remove(car)
             else:
+                total_time+=1
+                car.total_ts+=1
                 nxt_move = str(car.paths[0].id)
                 cur_pos = str(car.current_position.id)
                 #print('car position', cur_pos, type(car.current_position))
@@ -119,6 +146,11 @@ if __name__ == '__main__':
                         car.ts_on_current_position += 1
                         continue
                 if nxt_move in edges:
+                    print(str(car.current_position),str(car.dest))
+                    if True:
+                        new_path = nv.dk(str(car.current_position),str(car.dest),weight_on_length=1.0)
+                        car.set_path(new_path[1:])
+                        nxt_move = new_path[1].id
                     if not edges[nxt_move].add():
                         print('on hold edge',edges[nxt_move])
                         continue

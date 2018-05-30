@@ -32,22 +32,41 @@ def dk(start,end,weight_on_length=1.0):
     paths[str(start)] = [str(start)]
     
     last_run = [str(start)]
-    
     #- tmp_run is nodes visited during this cycle
+    neighbor_history = []
+    history = [last_run]
     tmp_run = []
+    #counter=0
     while not used[str(end)]:
         #- sometimes error occured, this if statement just for avoiding errors
+        #print(last_run)
+        #print('counter',counter)
+        #counter+=1
         if len(last_run) == 0:
+            #print(history)
+            print('start',start,'destination',end,end in nodes)
+            #print(neighbor_history)
+            for i in history:
+                if end in i:
+                    print('?????')
+            for i in neighbor_history:
+                if end in i:
+                    print('!!!!!')
+            #quit()
             return False
-
         #- run thru each nodes visited last cycle
         for cur in last_run:
-            #neighbor_edges = nodes[str(cur)].edge_list
-            neighbor_edges_tmp = nodes[str(cur)].out_edges
-            neighbor_edges = []
-            for i in neighbor_edges_tmp:
-                neighbor_edges.append(str(i))
+            neighbor_edges = nodes[str(cur)].out_edges
+            neighbor_edges = [str(i) for i in neighbor_edges]
+            for ne in neighbor_edges:
+                if not ne in edges:
+                    print(ne,str(ne) in edges)
+                    print(edges)
+                    quit()
             neighbor_nodes = [str(edges[ne].v) for ne in neighbor_edges]
+            neighbor_history.append(neighbor_nodes)
+            #print('neighbor_nodes',neighbor_nodes)
+            #print('neighbor_edges',neighbor_edges)
             for i in range(len(neighbor_nodes)):
                 this_id = str(neighbor_nodes[i])
                 
@@ -67,6 +86,7 @@ def dk(start,end,weight_on_length=1.0):
                     tmp_run.append(this_id)
             for nn in neighbor_nodes:
                 used[nn] = True
+        history.append(tmp_run)
         last_run = tmp_run
         tmp_run = []
         

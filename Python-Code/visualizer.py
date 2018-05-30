@@ -25,8 +25,11 @@ def drawMap(nodes,edges):
                 plt.plot([u.x,v.x],[u.y,v.y],linestyle='-',\
                     color=c.EDGE_COLOR,linewidth=edge.num_lanes*c.PLOT_EDGE_WIDTH)
             else:
-                plt.plot([edge.u.x,edge.v.x],[edge.u.y,edge.v.y],linestyle='-',\
-                    color=c.EDGE_COLOR,linewidth=edge.num_lanes*c.PLOT_EDGE_WIDTH)
+                #plt.plot([edge.u.x,edge.v.x],[edge.u.y,edge.v.y],linestyle='-',\
+                #    color=c.EDGE_COLOR,linewidth=edge.num_lanes*c.PLOT_EDGE_WIDTH)
+                plt.arrow(edge.u.x,edge.u.y,edge.v.x-edge.u.x,edge.v.y-edge.u.y,\
+                    color=c.EDGE_COLOR,width=0.00001,head_width=0.0001,length_includes_head=True)
+                plt.text((edge.u.x+edge.v.x)/2,(edge.v.y+edge.u.y)/2,edge.id)
     else:
         nl = np.array([i.id for i in nodes])
         for inode in nodes:
@@ -44,8 +47,10 @@ def drawMap(nodes,edges):
             else:
                 plt.plot([iedge.u.x,iedge.v.x],[iedge.u.y,iedge.v.y],\
                     linestyle='-',color=c.EDGE_COLOR,linewidth=edge.num_lanes*c.PLOT_EDGE_WIDTH)
+                
                     
-    
+def drawPoint(pt1):
+    plt.plot(pt1[0],pt1[1],linestyle='none',marker='o',markersize=12,color='red')
 
 
 def drawCars(cars,draw=True):
