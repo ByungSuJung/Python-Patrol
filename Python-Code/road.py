@@ -5,6 +5,20 @@ import numpy as np
 class Road(object):
     def __init__(self, id, start, destination, max_speed, num_lanes, length):
         # CONSTANTS
+        self.AVG_CAR_LENGTH = 4.6       # meters
+        self.ONE_TIME_STEP = 0.3         
+        self.origin_steps = None
+        self.id = id                    # float
+        self.u = start              # Node u 
+        self.v = destination  # Node v
+        self.max_speed = max_speed      # int
+        self.num_lanes = num_lanes      # int
+        self.length = length            # int
+        self.calculate_time_steps()     # int (floor)
+        self.calculate_capacity()       # int 
+        #self.queue = q.Queue(maxsize=self.capacity)
+        self.queue = []
+        self.q_size = 0
         self.time = length/max_speed
     def __hash__(self):
         return hash(str(self))
@@ -18,6 +32,7 @@ class Road(object):
         self.capacity = (self.num_lanes * self.length) / self.AVG_CAR_LENGTH
 
     def calculate_time_steps(self): 
+        self.time_steps = \
         (int) (((self.length / self.max_speed) * 3600) / c.ONE_TIME_STEP) + 1
         self.origin_steps = self.time_steps
     
@@ -42,8 +57,8 @@ class Road(object):
 if __name__ == '__main__': 
     myRoad = Road(0, 153426, 141414, 40, 2, 2111)
     print("id: ", myRoad.id)
-    print("start: ", myRoad.u)
-    print("destination: ", myRoad.v)
+    print("start: ", myRoad.start)
+    print("destination: ", myRoad.destination)
     print("queue: ", myRoad.queue)
     print("q_size: ", myRoad.q_size)
     print("max_speed: ", myRoad.max_speed)
