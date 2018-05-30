@@ -209,21 +209,26 @@ if __name__ == '__main__':
                 if type(car.current_position) == Road:
                     if car.ts_on_current_position < edges[cur_pos].time_steps:
                         car.ts_on_current_position += 1
+                        car.total_times_for_car += 1 #Keep track of the total time of road
                         continue
                 else:
                     if car.ts_on_current_position < nodes[cur_pos].time_steps:
                         car.ts_on_current_position += 1
+                        car.total_times_for_car += 1 #Keep track of the total time of road
                         continue
                 if nxt_move in edges:
                     if not edges[nxt_move].add():
                         print('on hold edge',edges[nxt_move])
+                        car.time_stopped +=1 #Keep track of the total time it was in traffic
                         continue
                     car.current_position = edges[nxt_move]
                     nodes[cur_pos].remove()
                     car.ts_on_current_position = 0
+                    car.distance_traveled += edges[nxt_move] #Keep track of total distance traveled
                 elif nxt_move in nodes:
                     if not nodes[nxt_move].add():
                         print('on hold node',nodes[nxt_move])
+                        car.time_stopped +=1 #Keep track of the total time it was in traffic
                         continue
                     car.current_position = nodes[nxt_move]
                     edges[cur_pos].remove()

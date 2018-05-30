@@ -10,6 +10,8 @@ class Car(object):
         self.total_times_for_car = 0
         # self.queue or list_path to update for normal_move
         self.path = path  
+        self.time_stopped = 0
+        self.distance_traveled = 0
     
     # move for normal disjktra, require list of shortest path node and edges
     def normal_move(self):
