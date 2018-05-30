@@ -44,7 +44,7 @@ def dk(start,end,weight_on_length=1.0):
         #counter+=1
         if len(last_run) == 0:
             #print(history)
-            print('start',start,'destination',end,end in nodes)
+            #print('start',start,'destination',end,end in nodes)
             #print(neighbor_history)
             for i in history:
                 if end in i:

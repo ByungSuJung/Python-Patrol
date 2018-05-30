@@ -13,7 +13,7 @@ edges = None
 test_start = None
 test_end = None
 
-def drawMap(nodes,edges):
+def drawMap(nodes,edges,text=False):
     if type(nodes) is dict:
         for key, node in nodes.items():
             plt.plot(node.x,node.y,linestyle='none',\
@@ -28,8 +28,9 @@ def drawMap(nodes,edges):
                 #plt.plot([edge.u.x,edge.v.x],[edge.u.y,edge.v.y],linestyle='-',\
                 #    color=c.EDGE_COLOR,linewidth=edge.num_lanes*c.PLOT_EDGE_WIDTH)
                 plt.arrow(edge.u.x,edge.u.y,edge.v.x-edge.u.x,edge.v.y-edge.u.y,\
-                    color=c.EDGE_COLOR,width=0.00001,head_width=0.0001,length_includes_head=True)
-                plt.text((edge.u.x+edge.v.x)/2,(edge.v.y+edge.u.y)/2,edge.id)
+                    color=c.EDGE_COLOR,width=0.00001*edge.num_lanes,head_width=0.0001,length_includes_head=True)
+                if text:
+                    plt.text((edge.u.x+edge.v.x)/2,(edge.v.y+edge.u.y)/2,edge.id)
     else:
         nl = np.array([i.id for i in nodes])
         for inode in nodes:
@@ -95,8 +96,8 @@ def update(cars):
     plt.pause(c.ANIMATION_SEG)
     
 
-def init_graph(nodes,edges,cars):
-    drawMap(nodes,edges)
+def init_graph(nodes,edges,cars,text=False):
+    drawMap(nodes,edges,text=text)
     drawCars(cars)
 
 if __name__ == '__main__':
