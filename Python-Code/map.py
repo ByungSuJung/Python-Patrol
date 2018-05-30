@@ -12,13 +12,13 @@ class Map:
 	"""
 
 	"""
-	def __init__(self, center_lat=47.608013, center_long=-122.335167, dist=150, num_cars=1):
+	def __init__(self, center_lat=47.608013, center_long=-122.335167, dist=150, num_cars=10):
 		"""
 
 		"""
 		#nodes, edges = util.retreiveMap(place=(47.608013, -122.335167),distance=1000)
 		center_pt = (center_lat, center_long)
-		G = ox.graph_from_point(center_pt, network_type='drive')
+		G = ox.graph_from_point(center_pt, distance=300, network_type='drive') # distance = dist
 		self.node_map = self.set_intersections(G) #dictionary of nodes
 		#print(self.node_map)
 		self.edge_map = self.set_roads(G, self.node_map) #dictionary of edges
@@ -32,6 +32,11 @@ class Map:
 		#	self.nodes[str(edge.v)].add_edge(edge)
 		#	self.nodes[str(edge.v)].cap += edge.num_lanes
 		self.car_map = self.set_cars(G, self.edge_map, self.node_map, num_cars) #list of cars 
+		node_list = list(self.node_map.values())
+		for node in node_list: 
+			for car in self.car_map: 
+				if car.current_position == node: 
+					node.add(car)
 	
 	def set_intersections(self, G):
 		"""
@@ -88,19 +93,13 @@ class Map:
 		return edge_dict
 
 	def add_edges(self, node_dict, edge_dict):
-		#outgoing_edges = [] #edges leaving this current node
-		#incoming_edges = [] #edges arriving to this current node
-		#incoming_lanes = 0  
-		#accsessible_nodes = [] #nodes that can be accessesed from this node
 		for n in list(node_dict.values()): #list of intersection objs
 			for e in list(edge_dict.values()): #list of road objs
 				if e.u == n: #outgoing edge
 					n.add_edge(e)
-					#outgoing_edges.append(e) #List of road objs
-					#accsessible_nodes.append(e.v) #list of intersection ids
-				#if e.v == n:
-					#incoming_edges.append(e.id)
-					#incoming_lanes += e.num_lanes
+				if e.v == n:
+					n.add_edge(e, out=False)
+					
 
 	def set_cars(self, G, edge_dict, node_dict, num_cars):
 		"""
@@ -109,7 +108,12 @@ class Map:
 
 		start = rn.choice(list(node_dict.values()))
 		destination = rn.choice(list(node_dict.values()))
+		while start == destination: 
+			destination = rn.choice(list(node_dict.values()))
+		#start = node_dict[53213414]
+		#destination = node_dict[53213413]
 		#path = nx.dijkstra_path(G,start,destination)
+		print("passing dest", destination.id)
 		path = start.shortest_path(destination)
 		car_list = []
 		for i in range(num_cars):
@@ -131,5 +135,5 @@ class Map:
 				then what???
 			"""
 			#path = nx.dijkstra_path(G,start,destination)
-			car_list.append(Car(start, destination, path))
+			car_list.append(Car(start, destination, map=self, path=path))
 		return car_list

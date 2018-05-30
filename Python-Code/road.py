@@ -27,12 +27,14 @@ class Road(object):
         # for now 
        # print("num_lanes", self.num_lanes)
        # print("length", self.length)
-        self.capacity = (self.num_lanes*self.length) / self.AVG_CAR_LENGTH
+        self.capacity = (int) ((self.num_lanes*self.length) / self.AVG_CAR_LENGTH)
+        #print ("road capacity", self.capacity)
+        
 
     def calculate_time_steps(self): 
         self.time_steps = \
         (int) (((self.length / self.max_speed)) / self.ONE_TIME_STEP) 
-        print(self.time_steps)
+        #print("time_steps", self.time_steps)
     
     def add(self, car):
         self.queue.append(car)
@@ -44,8 +46,10 @@ class Road(object):
         self.q_size -= 1
 
     def run(self): 
+        #print("road run start")
         for car in self.queue: 
             car.move()
+        #print("road run done")
     
 
 """

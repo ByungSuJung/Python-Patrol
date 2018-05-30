@@ -15,12 +15,24 @@ class Intersection(object):
 		self.out_edges = []
 		self.in_edges = []					#List - List of connected edges
 		self.neighbor_nodes = []				#List - List of neighboring nodes
-		self.cap = 0			#int - Allowed size of queue
+		self.capacity = 0			#int - Allowed size of queue
 		self.time_steps = 2							#int - Number of time steps to pass through node
 		self.visted = False							#bool - Used for dijkstra's shortest path
 		self.value = sys.maxsize					#int - Used for dijkstra's shortest path
 		self.trail = []	
 		self.priority_Q = PriorityQueue()			#List - The list of nodes in the shortest path
+
+	"""def calculate_capacity(self): 
+		sum = 0 
+		for edge in self.out_edges:
+			print(edge.num_lanes) 
+			sum += edge.num_lanes
+
+		for edge in self.in_edges:
+			print("incoming", edge.num_lanes)
+			sum += edge.num_lanes
+		#print("sum", sum)
+		return sum  """
 
 	def __lt__(self, other): 
 		return self.value <= other.value
@@ -28,32 +40,25 @@ class Intersection(object):
 	def add_edge(self, edge, out=True):
 		if out == True:
 			self.out_edges.append(edge)
+			self.capacity += edge.num_lanes
 		else:
 			self.in_edges.append(edge)
-			self.cap += edge.num_lanes
-		
-		#Add the edge to list of edges
-		#Determine which node your neighbor is
-		neighbor_node = edge.u if self.id \
-		!= edge.u.id else edge.v
-		self.neighbor_nodes.append(neighbor_node)#Add the node to your neighbor list
+			self.capacity += edge.num_lanes
 
 	def add(self, car):
-		if(len(self.queue) + 1 <= self.cap):
-			self.queue.append(car)					#Place the car onto the queue
-			self.q_size += 1						#Properly track queue size
-			car.ts_on_obj = 0						#Reset the time on object for the car
-			return True
-
-		return False								#If it was not added to the queue return False
+		self.queue.append(car)
+		self.q_size += 1
+		car.ts_on_current_position = 0 
 
 	def remove(self):
-		self.queue.pop()							#Remove the front car from the queue
+		self.queue.pop(0)							#Remove the front car from the queue
 		self.q_size -= 1							#Properly track queue size
 
 	def run(self): 
+		#print("intersection run start")
 		for car in self.queue: 
 			car.move()
+		#print("intersection run end")
 
 
 	"""
@@ -80,46 +85,75 @@ class Intersection(object):
 		self.value = 0 
 		priority_Q = PriorityQueue()
 		#self.priority_Q.put_nowait(self)
-		print("here")
+		#print("here")
 		current = self
-		current.trail.append(current)
+		self.parent = None
+		#self.trail.append(current)
 		while current != destination:
 			current.visited = True
 			current.relax_neighbors(priority_Q)
-			print("before first pop")
+			#print("before first pop")
 			current = priority_Q.get_nowait()
-			print(current.value)
-			print("after first pop")
+			print("just popped", current.id)
+			#print(current.value)
+			#print("after first pop")
+			if current == destination: 
+				print("final popped", current.id)
+				##for position in current.trail: 
+					##print("dijks trail: ")
+					##print(position.id)
+				
 
 		"""if current == destination: 
 			current.trail = 
 			self.trail.append(current)
 		else: 
 			pass """
-		return current.trail
+		result = [current]
+		while current.parent != None: 
+			parent = current.parent
+			for edge in parent.out_edges:
+				if edge.v == current: 
+					result.insert(0, edge)
+			result.insert(0, current.parent)
+			current = current.parent
+		#if current == self: 
+		#	result.insert(0, current)
+
+		for position in result: 
+			print("dijks trail: ")
+			print(position.id)
+		self.reset_nodes
+		return result
 
 
 	def relax_neighbors(self, priority_Q):
 		for edge in self.out_edges: 
-			print("relaxing")
+			#print("relaxing")
 			neighbor_node = edge.v
 			temp_value = self.value + edge.time_steps + neighbor_node.time_steps
-			print(temp_value)
+			#print(temp_value)
 			if not neighbor_node.visted and temp_value < neighbor_node.value:
 			#if temp_value < neighbor_node.value:
 				neighbor_node.value = temp_value
-				neighbor_node.trail = self.trail
-				neighbor_node.trail.append(neighbor_node)
+				neighbor_node.parent = self
+				#neighbor_node.trail = self.trail
+				#neighbor_node.trail.append(edge)
+				#neighbor_node.trail.append(neighbor_node)
+				#print("trail till now: ")
+				#for position in neighbor_node.trail: 
+				#	print(position.id, end=' ')
+				#print()
+
 				#self.priority_Q.put_nowait((self.value, neighbor_node))
 				priority_Q.put_nowait(neighbor_node)
-				print("inside if")
+				#print("inside if")
 			else: 
-				print("inside else")
+				#print("inside else")
 				pass 
 	
 	def reset_nodes(self):
 		for node in self.map.node_list:
-			node.priority_Q = PriorityQueue()
 			node.visted = False
 			node.value = sys.maxsize
 			node.trail = []
