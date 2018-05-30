@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import matplotlib
 import constants as c
 from car import Car
 from intersection import Intersection as Node
@@ -14,6 +15,7 @@ test_start = None
 test_end = None
 
 def drawMap(nodes,edges,text=False):
+    #matplotlib.use('GTKAgg') 
     if type(nodes) is dict:
         for key, node in nodes.items():
             plt.plot(node.x,node.y,linestyle='none',\
@@ -25,10 +27,10 @@ def drawMap(nodes,edges,text=False):
                 plt.plot([u.x,v.x],[u.y,v.y],linestyle='-',\
                     color=c.EDGE_COLOR,linewidth=edge.num_lanes*c.PLOT_EDGE_WIDTH)
             else:
-                #plt.plot([edge.u.x,edge.v.x],[edge.u.y,edge.v.y],linestyle='-',\
-                #    color=c.EDGE_COLOR,linewidth=edge.num_lanes*c.PLOT_EDGE_WIDTH)
-                plt.arrow(edge.u.x,edge.u.y,edge.v.x-edge.u.x,edge.v.y-edge.u.y,\
-                    color=c.EDGE_COLOR,width=0.00001*edge.num_lanes,head_width=0.0001,length_includes_head=True)
+                plt.plot([edge.u.x,edge.v.x],[edge.u.y,edge.v.y],linestyle='-',\
+                    color=c.EDGE_COLOR,linewidth=edge.num_lanes*c.PLOT_EDGE_WIDTH)
+                #plt.arrow(edge.u.x,edge.u.y,edge.v.x-edge.u.x,edge.v.y-edge.u.y,\
+                #    color=c.EDGE_COLOR,width=0.00001*edge.num_lanes,head_width=0.0001,length_includes_head=True)
                 if text:
                     plt.text((edge.u.x+edge.v.x)/2,(edge.v.y+edge.u.y)/2,edge.id)
     else:
@@ -166,12 +168,6 @@ if __name__ == '__main__':
     #- calculate shortest path for each car
     for car in cars:
         paths = nv.dk(car.start.id,car.dest.id)
-        '''
-        test_start = [car.start.x,car.start.y]
-        test_end = [car.dest.x,car.dest.y]
-        plt.plot(test_end[0],test_end[1],color='red',linestyle='none',marker='o',markersize=10)
-        plt.plot(test_start[0],test_start[1],color='red',linestyle='none',marker='o',markersize=10)
-        '''
         #paths = car.start.shortest_path(car.dest)
         while type(paths) is bool:
             print('Re-routing')
@@ -183,13 +179,7 @@ if __name__ == '__main__':
             car.dest = nodes[node_key[r_v[1]]]
             paths = nv.dk(car.start.id,car.dest.id)
         #- add paths to car object
-        #path_id = [p.id for p in paths]
-        #paths = nv._expand_path(path_id)
-        if len(paths) == 1:
-            print('length is 1')
         car.set_path(paths[1:])
-        for i in paths:
-            print(str(i))
     
     '''
     cars = []

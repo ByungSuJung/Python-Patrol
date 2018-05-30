@@ -19,8 +19,8 @@ if __name__ == '__main__':
     
     nodes_file_path = 'map/nodes.npy'
     edges_file_path = 'map/edges.npy'
-        
-    nodes, edges = util.retreiveMap(place=(47.608013, -122.335167),distance=600,savefile=False)
+    
+    nodes, edges = util.retreiveMap(place=(47.608013, -122.335167),distance=2000,savefile=True)
     #nodes, edges = util.retreiveMap(place=(37.7749, -122.4194),distance=1000,savefile=True)
 
     #- If files do not exist, un-comment the line above and comment 3 lines below
@@ -74,7 +74,7 @@ if __name__ == '__main__':
         print(int((i+1)/car_size*100),'%')
         st = nodes[node_key[cars_u[i]]]
         end = nodes[node_key[cars_v[i]]]
-        paths = nv.dk(st.id,end.id,weight_on_length=1.0)
+        paths = nv.dk(st.id,end.id,weight_on_length=0.0)
         while type(paths) is bool or len(paths) == 0 or st.isFull():
             #print('Re-routing')
             r_v = np.random.randint(len(nodes),size=2)
@@ -82,27 +82,29 @@ if __name__ == '__main__':
                 r_v = np.random.randint(len(nodes),size=2)
             st = nodes[node_key[r_v[0]]]
             end = nodes[node_key[r_v[1]]]
-            print(str(st),str(end))
-            paths = nv.dk(st.id,end.id,weight_on_length=1.0)
+            #print(str(st),str(end))
+            paths = nv.dk(st.id,end.id,weight_on_length=0.0)
 
-        car = Car(st,end)
+        car = Car(st,end,modified=True)
         car.set_path(paths[1:])
         cars.append(car)
         st.add()
 
     # text=False to avoid edge id in plot
-    vis.init_graph(nodes,edges,cars,text=True)
+    vis.init_graph(nodes,edges,cars,text=False)
 
-    counter=0
     total_time = 0
     compute=0
     skip=0
+    f = open('arrival.txt','w')
     while len(cars) > 0:
         for car in cars:
             if car.current_position.id == car.dest.id:
-                counter+=1
                 nodes[car.current_position.id].remove()
-                print('{1},{0} to {3},{2}'.format(car.start.x,car.start.y,car.dest.x,car.dest.y),car.total_ts)
+                statement = '{1},{0} to {3},{2} time {4}'.format(car.start.x,car.start.y,car.dest.x,car.dest.y,car.total_ts)
+                #print('{1},{0} to {3},{2}'.format(car.start.x,car.start.y,car.dest.x,car.dest.y),car.total_ts)
+                print(statement)
+                print(statement,file=f)
                 cars.remove(car)
             else:
                 total_time+=1
@@ -123,8 +125,8 @@ if __name__ == '__main__':
                     '''
                     Change True to modified
                     '''
-                    if True:
-                        tmp_path = nv.dk(str(car.current_position),str(car.dest),weight_on_length=1.0)
+                    if car.modified:
+                        tmp_path = nv.dk(str(car.current_position),str(car.dest),weight_on_length=0.0)
                         if type(tmp_path) != bool:
                             new_path = tmp_path
                             car.set_path(new_path[1:])
@@ -148,6 +150,6 @@ if __name__ == '__main__':
                     car.ts_on_current_position = 0
                 car.paths.pop(0)
         vis.update(cars)
-    
+    f.close()
     plt.ion()
     plt.show()
