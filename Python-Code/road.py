@@ -1,4 +1,5 @@
 import queue as q
+import constants as c
 
 class Road(object):
     def __init__(self, id, start, destination, max_speed, num_lanes, length):
@@ -28,13 +29,13 @@ class Road(object):
 
     def calculate_time_steps(self): 
         self.time_steps = \
-        (int) (((self.length / self.max_speed) * 3600) / self.ONE_TIME_STEP) 
+        (int) (((self.length / self.max_speed) * 3600) / c.ONE_TIME_STEP) + 1
     
     def add(self, car):
         if self.q_size + 1 <= self.capacity:
             self.queue.put_nowait(car)
             self.q_size += 1
-            car.ts_on_current_position = 0
+            car.ts_on_current_position = 1
             return True
         return False
         

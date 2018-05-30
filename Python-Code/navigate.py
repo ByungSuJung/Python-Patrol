@@ -40,6 +40,7 @@ def dk(start,end,weight_on_length=1.0):
         #- sometimes error occured, this if statement just for avoiding errors
         if len(last_run) == 0:
             return False
+            
         #- run thru each nodes visited last cycle
         for cur in last_run:
             #neighbor_edges = nodes[str(cur)].edge_list
@@ -76,7 +77,7 @@ def _expand_path(paths):
     ''' expand paths from nodes to mix of nodes and edges
     
     Args:
-        paths: list of nodes
+        paths: list of nodes in string
     
     Returns:
         list of nodes and edges that car can follow

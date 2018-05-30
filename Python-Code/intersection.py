@@ -17,7 +17,7 @@ class Intersection(object):
 		self.in_edges = []					#List - List of connected edges
 		self.neighbor_nodes = []				#List - List of neighboring nodes
 		self.cap = 0			#int - Allowed size of queue
-		self.time_steps = 2							#int - Number of time steps to pass through node
+		self.time_steps = 2	+ 1						#int - Number of time steps to pass through node
 		self.visted = False							#bool - Used for dijkstra's shortest path
 		self.value = sys.maxsize					#int - Used for dijkstra's shortest path
 		self.trail = []	
@@ -51,7 +51,7 @@ class Intersection(object):
 		if(len(self.queue) + 1 <= self.cap):
 			self.queue.append(car)					#Place the car onto the queue
 			self.q_size += 1						#Properly track queue size
-			car.ts_on_obj = 0						#Reset the time on object for the car
+			car.ts_on_current_position = 1						#Reset the time on object for the car
 			return True
 
 		return False								#If it was not added to the queue return False
@@ -63,6 +63,8 @@ class Intersection(object):
 	def run(self): 
 		for car in self.queue: 
 			car.move()
+	def isFull(self):
+		return self.q_size >= self.cap
 
 
 	"""
@@ -127,48 +129,3 @@ class Intersection(object):
 			node.trail = []
 
 
-	"""
-	def shortest_path(self, all_nodes):
-		for car in self.queue:
-			self.value = 0						#Set uing destination distance to zero
-			u.trail = str(u.id)			#Update the trail
-			to_vist = all_nodes					#Copy list of all nodes into a list seperate list to visit
-			#Continue looking at each node until the destination has been visited
-			while(not car.v.visted and len(to_vist) > 0):
-				#Sort the list in place by the node values, the values will be
-				#sorted from smallest to largest
-				to_vist.sort(key = lambda intesection: node.value, reverse=False)	#If this is too slow, we can figure out how to get
-																					#the min node.value
-				
-				#Visit the node with the lowest value
-				self.visit_node(to_vist[0])
-				#Remove the front node from the to visit list since it has been visited
-				to_vist.pop(0)
-			car.path = car.v.trail
-			self.reset_nodes(all_nodes)
-	
-	def visit_node(self, node):
-		node.visted = True
-		#Edit each connected node to this current node
-		for edge in node.out_edges:
-			#Determine what node you are i.e. nodeA or nodeB
-			my_node = edge.nodeA if node.id == edge.nodeA.id else edge.nodeB
-			other_node = edge.nodeA if node.id != edge.nodeA.id else edge.nodeB
-			#Make sure the node you're about to edit isn't already visited
-			if(not other_node.visted):
-				#Check if you've found a shorter path
-				if(my_node.value + edge.length < other_node.value):
-					other_node.value = my_node.value + edge.length#Update the distance to that node
-					other_node.trail = my_node.trail.append(other_node)#Update where that distance came from
-	
-	def modi_dijkstra(self, car):
-		decide = np.random.randint(0,2).astype(bool)
-		if(decide):
-			print("You've been give your next node")
-			return True
-		else:
-			print("You can't move")
-			return False
-	"""
-
-#Testing area for this module

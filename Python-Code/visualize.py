@@ -61,8 +61,8 @@ def drawCars(cars,draw=True):
         else:
             #- car is on edge
             #car.ts_on_current_position
-            portion = icar.ts_on_current_position / 10 #cur_steps
-
+            portion = icar.ts_on_current_position / icar.current_position.time_steps #cur_steps
+            
             if type(cur_p.u) is Node:
                 car_list[it,0] = cur_p.u.x + (cur_p.v.x - cur_p.u.x) * portion
                 car_list[it,1] = cur_p.u.y + (cur_p.v.y - cur_p.u.y) * portion
@@ -125,10 +125,6 @@ if __name__ == '__main__':
         nodes[str(edge.u)].cap += edge.num_lanes
         nodes[str(edge.v)].add_edge(edge)
         nodes[str(edge.v)].cap += edge.num_lanes
-        #nodes[str(edge.u)].add_edge(str(edge.id))
-        #nodes[str(edge.u)].cap += edge.num_lanes
-        #nodes[str(edge.v)].add_edge(str(edge.id))
-        #nodes[str(edge.v)].cap += edge.num_lanes
     
     #- get seperate list of ids
     node_key = list(nodes.keys())
@@ -148,7 +144,10 @@ if __name__ == '__main__':
     cars_v = np.random.randint(len(nodes),size=car_size)
     cars =[]
     for i in range(car_size):
-        cars.append(Car(nodes[node_key[cars_u[i]]],nodes[node_key[cars_v[i]]]))
+        st = nodes[node_key[cars_u[i]]]
+        while st.isFull():
+            st = nodes[node_key[np.random.randint(len(nodes))]]
+        cars.append(Car(st,nodes[node_key[cars_v[i]]]))
     
     #- have map and cars ready on plot
     _init_graph(nodes,edges,cars)
