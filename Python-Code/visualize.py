@@ -18,9 +18,6 @@ def drawMap(nodes,edges):
         for key, node in nodes.items():
             plt.plot(node.x,node.y,linestyle='none',\
                 marker=c.NODE_PLOT_SHAPE,markersize=c.NODE_PLOT_SIZE)
-            if len(node.edge_list) == 0:
-                plt.plot(node.x,node.y,linestyle='none',\
-                marker=c.NODE_PLOT_SHAPE,markersize=c.NODE_PLOT_SIZE+10)
         for key, edge in edges.items():
             if type(edge.u) is int:
                 u = nodes[str(edge.u)]
@@ -65,8 +62,16 @@ def drawCars(cars,draw=True):
             #- car is on edge
             #car.ts_on_current_position
             portion = icar.ts_on_current_position / 10 #cur_steps
-            car_list[it,0] = nodes[str(cur_p.u)].x + (nodes[str(cur_p.v)].x-nodes[str(cur_p.u)].x) * portion
-            car_list[it,1] = nodes[str(cur_p.u)].y + (nodes[str(cur_p.v)].y-nodes[str(cur_p.u)].y) * portion
+
+            if type(cur_p.u) is Node:
+                car_list[it,0] = cur_p.u.x + (cur_p.v.x - cur_p.u.x) * portion
+                car_list[it,1] = cur_p.u.y + (cur_p.v.y - cur_p.u.y) * portion
+            else:
+                print('plotting using id')
+                car_list[it,0] = nodes[str(cur_p.u)].x + (nodes[str(cur_p.v)].x-nodes[str(cur_p.u)].x) * portion
+                car_list[it,1] = nodes[str(cur_p.u)].y + (nodes[str(cur_p.v)].y-nodes[str(cur_p.u)].y) * portion
+
+            
         it += 1
     if draw:
         car_data, = plt.plot(car_list[:,0],car_list[:,1],linestyle='none',\
@@ -114,11 +119,16 @@ if __name__ == '__main__':
     
     #add edges to nodes
     for key, edge in edges.items():
-        nodes[str(edge.u)].add_edge(str(edge.id))
+        edge.u = nodes[str(edge.u)]
+        edge.v = nodes[str(edge.v)]
+        nodes[str(edge.u)].add_edge(edge)
         nodes[str(edge.u)].cap += edge.num_lanes
-        nodes[str(edge.v)].add_edge(str(edge.id))
+        nodes[str(edge.v)].add_edge(edge)
         nodes[str(edge.v)].cap += edge.num_lanes
-
+        #nodes[str(edge.u)].add_edge(str(edge.id))
+        #nodes[str(edge.u)].cap += edge.num_lanes
+        #nodes[str(edge.v)].add_edge(str(edge.id))
+        #nodes[str(edge.v)].cap += edge.num_lanes
     
     #- get seperate list of ids
     node_key = list(nodes.keys())
@@ -146,14 +156,17 @@ if __name__ == '__main__':
     #- calculate shortest path for each car
     for car in cars:
         paths = nv.dk(car.start.id,car.dest.id)
+        #paths = car.start.shortest_path(car.dest)
         while type(paths) is bool:
-            print('error')
+            print('Re-routing')
             #- when pair of starts and destinations do not work, get new destination
             r_v = np.random.randint(len(nodes),size=2)
             car.start=nodes[node_key[r_v[0]]]
             car.dest = nodes[node_key[r_v[1]]]
             paths = nv.dk(car.start.id,car.dest.id)
         #- add paths to car object
+        #path_id = [p.id for p in paths]
+        #paths = nv._expand_path(path_id)
         car.set_path(paths[1:])
         
     while len(cars) > 0:

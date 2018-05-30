@@ -36,14 +36,17 @@ def dk(start,end,weight_on_length=1.0):
     
     #- tmp_run is nodes visited during this cycle
     tmp_run = []
-    
     while not used[str(end)]:
         #- sometimes error occured, this if statement just for avoiding errors
         if len(last_run) == 0:
             return False
         #- run thru each nodes visited last cycle
         for cur in last_run:
-            neighbor_edges = nodes[str(cur)].edge_list
+            #neighbor_edges = nodes[str(cur)].edge_list
+            neighbor_edges_tmp = nodes[str(cur)].out_edges
+            neighbor_edges = []
+            for i in neighbor_edges_tmp:
+                neighbor_edges.append(str(i))
             neighbor_nodes = [str(edges[ne].v) for ne in neighbor_edges]
             for i in range(len(neighbor_nodes)):
                 this_id = str(neighbor_nodes[i])
@@ -59,7 +62,7 @@ def dk(start,end,weight_on_length=1.0):
                         #- paths = original + this node
                     paths[this_id] = copy.deepcopy(paths[cur])
                     paths[this_id].append(neighbor_nodes[i])
-                    
+
                 if not used[this_id]:
                     tmp_run.append(this_id)
             for nn in neighbor_nodes:
@@ -67,7 +70,7 @@ def dk(start,end,weight_on_length=1.0):
         last_run = tmp_run
         tmp_run = []
         
-    return _expand_path(paths[end])
+    return _expand_path(paths[str(end)])
 
 def _expand_path(paths):
     ''' expand paths from nodes to mix of nodes and edges
@@ -82,9 +85,8 @@ def _expand_path(paths):
     for i in range(len(paths)-1):
         next_edges = nodes[paths[i]].edge_list
         for edge in next_edges:
-            if str(edges[edge].v) == paths[i+1]:
-                result.append(edges[edge])
+            if str(edge.v) == paths[i+1]:
+                result.append(edge)
                 break
         result.append(nodes[paths[i+1]])
-    #print(result)
     return result
