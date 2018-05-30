@@ -111,7 +111,7 @@ class Car(object):
     """
     def try_move_from_node(self):
         # if total_times_for_car % 2 == 0: 
-        #self.find_shortest_path()
+        self.find_shortest_path()
         #print("here")
         return self.try_move_from_edge()
     
@@ -125,7 +125,9 @@ class Car(object):
 
     def find_shortest_path(self): 
         # modified dijsktra
-        self.path = self.current_position.find_shortest_path(self.destination)
+        if self.current_position != self.path[0]:
+            self.current_position.reset_nodes()
+            self.path = self.current_position.shortest_path(self.destination)
         
 
 if __name__ == '__main__': 

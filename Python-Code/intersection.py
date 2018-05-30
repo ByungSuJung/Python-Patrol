@@ -17,7 +17,7 @@ class Intersection(object):
 		self.neighbor_nodes = []				#List - List of neighboring nodes
 		self.capacity = 0			#int - Allowed size of queue
 		self.time_steps = 2							#int - Number of time steps to pass through node
-		self.visted = False							#bool - Used for dijkstra's shortest path
+		self.visited = False							#bool - Used for dijkstra's shortest path
 		self.value = sys.maxsize					#int - Used for dijkstra's shortest path
 		self.trail = []	
 		self.priority_Q = PriorityQueue()			#List - The list of nodes in the shortest path
@@ -85,6 +85,7 @@ class Intersection(object):
 	"""
 
 	def shortest_path(self, destination): 
+		print("passed in destination = ", destination.id)
 		self.value = 0 
 		priority_Q = PriorityQueue()
 		#self.priority_Q.put_nowait(self)
@@ -126,7 +127,7 @@ class Intersection(object):
 		for position in result: 
 			print("dijks trail: ")
 			print(position.id)
-		self.reset_nodes
+		#self.reset_nodes
 		return result
 
 
@@ -136,7 +137,7 @@ class Intersection(object):
 			neighbor_node = edge.v
 			temp_value = self.value + edge.time_steps + neighbor_node.time_steps
 			#print(temp_value)
-			if not neighbor_node.visted and temp_value < neighbor_node.value:
+			if not neighbor_node.visited and temp_value < neighbor_node.value:
 			#if temp_value < neighbor_node.value:
 				neighbor_node.value = temp_value
 				neighbor_node.parent = self
@@ -156,10 +157,10 @@ class Intersection(object):
 				pass 
 	
 	def reset_nodes(self):
-		for node in self.map.node_list:
-			node.visted = False
-			node.value = sys.maxsize
-			node.trail = []
+		for node_id in self.map.node_map:
+			self.map.node_map[node_id].visited = False
+			self.map.node_map[node_id].value = sys.maxsize
+			self.map.node_map[node_id].trail = []
 
 
 	"""
