@@ -50,14 +50,17 @@ class Intersection(object):
 		self.q_size += 1
 		car.ts_on_current_position = 0 
 
-	def remove(self):
-		self.queue.pop(0)							#Remove the front car from the queue
+	def remove(self, car):
+		self.queue.remove(car)							#Remove the front car from the queue
 		self.q_size -= 1							#Properly track queue size
 
 	def run(self): 
 		#print("intersection run start")
 		for car in self.queue: 
-			car.move()
+			done = car.move()
+			if done: 
+				car.destination.remove(car)
+
 		#print("intersection run end")
 
 

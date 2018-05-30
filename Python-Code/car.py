@@ -3,7 +3,7 @@ from intersection import Intersection as intersection
 	
 class Car(object):
     def __init__(self, start, destination, map=None, path=None):
-        self.map = None
+        self.map = map
         self.current_position = start
         self.destination = destination 
         self.ts_on_current_position = 0
@@ -11,6 +11,7 @@ class Car(object):
         self.path = path # list of nodes from start to destination
         self.next_to_visit = path[1]
         self.visited = False
+        self.done = False
     
     def update(self): 
         if self.visited: 
@@ -20,15 +21,18 @@ class Car(object):
 
     # move for normal and modified dijkstra 
     def move(self):
+        if self.visited:
+            return False
         if self.ts_on_current_position == self.current_position.time_steps: 
             if type(self.current_position) is intersection:
                 can_move = self.try_move_from_node()
                 #print(can_move)
                 if can_move:
                     print("intersection to edge")
+                    print("car id", self.map.car_map.index(self))
                     print(type(self.current_position), " ", self.current_position.id)
                     self.next_to_visit.add(self)
-                    self.current_position.remove()
+                    self.current_position.remove(self)
                     self.current_position = self.next_to_visit
                     print(type(self.current_position), " ", self.current_position.id)
                     #if self.current_position != self.destination:
@@ -44,7 +48,7 @@ class Car(object):
                 if can_move: 
                     print("edge to intersection")
                     self.next_to_visit.add(self)
-                    self.current_position.remove() 
+                    self.current_position.remove(self) 
                     self.current_position = self.next_to_visit
                     print("current_position:", self.current_position.id)
                     print("self.destination: ", self.destination.id)
@@ -57,6 +61,10 @@ class Car(object):
                     else: 
                         print("reached destination")
                         print("index = ", self.path.index(self.current_position))
+                        print("finished car", self.map.car_map.index(self))
+                        self.destination.remove(self)
+                        self.done = True
+                        return True
                     """for edge in self.current_position.edge_list: 
                         if edge.destination == self.path[temp]: 
                             self.next_to_visit = self.path[temp]"""
@@ -71,6 +79,7 @@ class Car(object):
         #for position in self.path: 
             #print(position.id, ", ")
         #print("current", self.current_position.id)
+        return False
             
                     
     """

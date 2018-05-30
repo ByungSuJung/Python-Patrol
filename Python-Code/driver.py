@@ -3,10 +3,17 @@ from map import Map
 
 m = Map()
 def update():
+    done_list = []
     for car in m.car_map:
         car.update()
-        if car.current_position == car.destination:
-            m.car_map.remove(car)
+        if car.done:
+            m.car_map.remove(car) #done_list.append(car)
+    
+    for car in done_list: 
+        m.car_map.remove(car)
+        del car
+
+    
 """
 Start the clock
 """
@@ -17,7 +24,10 @@ ts = 0
 while len(m.car_map) > 0:
     update()
     for car in m.car_map:
-        car.visited = False
+        if car.done:
+            pass
+        else:
+            car.visited = False
     #visualize.drawMap(m.node_map, m.edge_map)
     ts+=1
     #if ts == 500: 

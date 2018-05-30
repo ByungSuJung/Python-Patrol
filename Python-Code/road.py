@@ -41,8 +41,8 @@ class Road(object):
         self.q_size += 1
         car.ts_on_current_position = 0 
 
-    def remove(self): 
-        self.queue.pop(0)
+    def remove(self, car): 
+        self.queue.remove(car)
         self.q_size -= 1
 
     def run(self): 
