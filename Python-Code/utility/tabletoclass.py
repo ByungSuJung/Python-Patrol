@@ -1,5 +1,5 @@
 import numpy as np
-from node import Node
+from intersection import Intersection as Node
 from road import Road
 import constants as c
 def node_to_object(nodes):
@@ -7,7 +7,6 @@ def node_to_object(nodes):
     
     Args:
         nodes: numpy array nodes
-
     Returns:
         a list of Node object
     '''
@@ -16,16 +15,16 @@ def node_to_object(nodes):
         id = str(inode[0])
         while id in node_dic:
             id = id + '9'
+        if id in node_dic:
+            continue
         node_dic[id] = Node(id,inode[1],inode[2])
     
     return node_dic
     
 def edge_to_object(edges):
     ''' converts numpy array edges into list of edge objects
-
     Args:
         edges: numpy array edges
-
     Returns:
         a list of Edge object
     '''
@@ -63,7 +62,10 @@ def edge_to_object(edges):
             lanes = np.max([int(i) for i in lanes])
         id = str(id)
         while id in roads_dic:
+            #print(roads_dic[id].u,roads_dic[id].v,roads_dic[id].id,'||||||',id,e[1],e[2])
             id = id + '99'
+        if id in roads_dic:
+            continue
         roads_dic[id] = Road(id,e[1],e[2],speed,int(lanes),length)
     for e in biway_edges:
         #- add 002 at the end of id for the opposite direction
@@ -99,7 +101,10 @@ def edge_to_object(edges):
         #roads_dic[str(id)] = Road(str(id),e[1],e[2],speed,int(lanes),length)
         id = str(id)
         while id in roads_dic:
+            #print(roads_dic[id].u,roads_dic[id].v,roads_dic[id].id,'||||||',id,e[1],e[2])
             id = id + '11'
+        if id in roads_dic:
+            continue
         if dif_lanes:
             roads_dic[id] = Road(id,e[1],e[2],speed,int(lanes[0]),length)
         else:
@@ -109,4 +114,4 @@ def edge_to_object(edges):
             roads_dic[id + '002'] = Road(id,e[2],e[1],speed,int(lanes[1]),length)
         else:
             roads_dic[id + '002'] = Road(id,e[2],e[1],speed,int(lanes),length)
-    return roads_dic
+        return roads_dic

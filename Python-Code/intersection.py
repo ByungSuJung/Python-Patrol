@@ -78,15 +78,17 @@ class Intersection(object):
 
 	def shortest_path(self, destination): 
 		self.value = 0 
+		priority_Q = PriorityQueue()
 		#self.priority_Q.put_nowait(self)
 		print("here")
 		current = self
 		current.trail.append(current)
 		while current != destination:
 			current.visited = True
-			current.relax_neighbors()
+			current.relax_neighbors(priority_Q)
 			print("before first pop")
-			current = self.priority_Q.get_nowait()
+			current = priority_Q.get_nowait()
+			print(current.value)
 			print("after first pop")
 
 		"""if current == destination: 
@@ -97,18 +99,19 @@ class Intersection(object):
 		return current.trail
 
 
-	def relax_neighbors(self):
+	def relax_neighbors(self, priority_Q):
 		for edge in self.out_edges: 
 			print("relaxing")
 			neighbor_node = edge.v
-			temp_value = edge.time_steps + neighbor_node.time_steps
+			temp_value = self.value + edge.time_steps + neighbor_node.time_steps
+			print(temp_value)
 			if not neighbor_node.visted and temp_value < neighbor_node.value:
 			#if temp_value < neighbor_node.value:
 				neighbor_node.value = temp_value
 				neighbor_node.trail = self.trail
 				neighbor_node.trail.append(neighbor_node)
 				#self.priority_Q.put_nowait((self.value, neighbor_node))
-				self.priority_Q.put_nowait(neighbor_node)
+				priority_Q.put_nowait(neighbor_node)
 				print("inside if")
 			else: 
 				print("inside else")
