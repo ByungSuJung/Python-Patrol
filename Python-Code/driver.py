@@ -119,6 +119,9 @@ if __name__ == '__main__':
                         car.ts_on_current_position += 1
                         continue
                 if nxt_move in edges:
+                    """
+                    #recalculate new path 
+                    """
                     if not edges[nxt_move].add():
                         print('on hold edge',edges[nxt_move])
                         continue
