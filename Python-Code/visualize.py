@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import constants as c
-from sam_car import Car
+from car import Car
 from intersection import Intersection as Node
 from road import Road
 import numpy as np
