@@ -6,6 +6,9 @@ class Car:
 		self.dest = dest
 		self.ts_on_current_position=0
 		self.paths = None
+		self.total_ts = 0
+		self.total_dist = 0
+		self.total_nodes_traveled = 0
 		start.add(self)
 
 	def set_path(self,paths):
@@ -22,7 +25,7 @@ class Car:
 				else:
 					print('on hold',type(self.paths[0]))
 					return False
-		else:
+		else: #current position is intersection
 			if self.paths[0].add(self):
 				self.current_position.remove()
 				self.current_position = self.paths[0]

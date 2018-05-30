@@ -90,7 +90,7 @@ def update(cars):
     plt.pause(c.ANIMATION_SEG)
     
 
-def _init_graph(nodes,edges,cars):
+def init_graph(nodes,edges,cars):
     drawMap(nodes,edges)
     drawCars(cars)
 
@@ -150,7 +150,7 @@ if __name__ == '__main__':
         cars.append(Car(st,nodes[node_key[cars_v[i]]]))
     
     #- have map and cars ready on plot
-    _init_graph(nodes,edges,cars)
+    init_graph(nodes,edges,cars)
     
     #- calculate shortest path for each car
     for car in cars:

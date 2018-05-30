@@ -1,5 +1,3 @@
-from road import Road
-from node import Node
 import numpy as np
 import copy
 import sys
