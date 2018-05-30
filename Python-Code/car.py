@@ -10,6 +10,7 @@ class Car:
 		self.total_dist = 0
 		self.total_nodes_traveled = 0
 		self.modified = modified
+		self.time_stopped = 0
 		#start.add(self)
 
 	def set_path(self,paths):
