@@ -11,7 +11,7 @@ class Map:
 
 	"""
 	def __init__(self, center_lat=47.608013, center_long=-122.335167, \
-		dist=150, num_cars=10):
+		dist=100, num_cars=10):
 		"""
 
 		"""
@@ -22,6 +22,7 @@ class Map:
 		self.add_edges(self.node_map, self.edge_map) #adds edges to nodes
 		self.car_map = self.set_cars(G, self.edge_map, \
 			self.node_map, num_cars) #list of cars 
+		G.get_
 	
 	def set_intersections(self, G):
 		"""
@@ -32,7 +33,7 @@ class Map:
 			name = n[1]['osmid']
 			x = n[1]['x']
 			y = n[1]['y']
-			node_to_insert = Intersection(name, x, y)
+			node_to_insert = Intersection(name, x, y, map=self)
 			node_dict[name] = node_to_insert
 		return node_dict
 
@@ -84,9 +85,13 @@ class Map:
 
 		"""
 		start = rn.choice(list(node_dict.values()))
+		
 		destination = rn.choice(list(node_dict.values()))
 		#path = nx.dijkstra_path(G,start,destination)
 		path = start.shortest_path(destination)
+		print(start.id)
+		print(destination.id)
+		print(path)
 		car_list = []
 		for i in range(num_cars):
 			"""

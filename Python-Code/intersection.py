@@ -19,11 +19,21 @@ class Intersection(object):
 		self.time_steps = 2							#int - Number of time steps to pass through node
 		self.visted = False							#bool - Used for dijkstra's shortest path
 		self.value = sys.maxsize					#int - Used for dijkstra's shortest path
-		self.trail = []	
-		self.priority_Q = PriorityQueue()			#List - The list of nodes in the shortest path
+		self.trail = [] #List - The list of nodes in the shortest path
+		self.priority_Q = PriorityQueue()				
 
-	def __cmp__(self, other): 
+	def __eq__(self, other):
+		return self.value == other.value
+	def __ne__(self, other):
+		return self.value != other.value
+	def __lt__(self, other):
 		return self.value < other.value
+	def __le__(self, other):
+		return self.value <= other.value
+	def __gt__(self, other):
+		return self.value > other.value
+	def __ge__(self, other):
+		return self.value >= other.value
 
 	def add_edge(self, edge, out=True):
 		if out == True:
@@ -64,7 +74,7 @@ class Intersection(object):
 
 				#Decide whcich function to run
 				#based off the modified param
-				moved = self.modi_dijkstra(car)	if \
+				moved = self.modi_dijkstra(car)	if 
 				modified else car.follow_trail()
 
 				if(moved):
@@ -82,6 +92,7 @@ class Intersection(object):
 		self.priority_Q.put_nowait(self)
 		current = self
 		while current != destination:
+			print("finding shortest path")
 			self.trail.append(current)
 			current.visited = True
 			current.relax_neighbors()
@@ -99,14 +110,15 @@ class Intersection(object):
 	def relax_neighbors(self):
 		for edge in self.out_edges: 
 			neighbor_node = edge.v
+			print("relaxing neighbors")
 			if not neighbor_node.visted:
 				neighbor_node.value = edge.time_steps + neighbor_node.time_steps
-				self.priority_Q.put_nowait((self.value, neighbor_node))
+				self.priority_Q.put_nowait(neighbor_node)
 			else: 
 				pass 
 	
 	def reset_nodes(self):
-		for node in self.map.node_list:
+		for node in list(self.map.node_map.values()):
 			node.visted = False
 			node.value = sys.maxsize
 			node.trail = []
@@ -168,8 +180,9 @@ class Intersection(object):
 	"""
 
 #Testing area for this module
+"""
 if __name__ == '__main__': 
-	test = node("a", 1, 2)
+	test = Intersection("a", 1, 2)
 
 	node = np.load("node.npy")
 	edge = np.load("edge.npy")
@@ -186,3 +199,5 @@ if __name__ == '__main__':
 
 	plt.plot(x_vals, y_vals, 'o')
 	#plt.show()
+	#print("finshed intersection")
+"""
