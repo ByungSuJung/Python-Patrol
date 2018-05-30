@@ -1,11 +1,8 @@
 import matplotlib.pyplot as plt
 import constants as c
 from sam_car import Car
-<<<<<<< HEAD
-=======
 from intersection import Intersection as Node
 from road import Road
->>>>>>> 42bc4aa698c72713c78b32cf953a29893f878e61
 import numpy as np
 import utility as util
 import navigate as nv
