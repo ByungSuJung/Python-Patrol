@@ -57,8 +57,8 @@ class Road(object):
 if __name__ == '__main__': 
     myRoad = Road(0, 153426, 141414, 40, 2, 2111)
     print("id: ", myRoad.id)
-    print("start: ", myRoad.start)
-    print("destination: ", myRoad.destination)
+    print("start: ", myRoad.u)
+    print("destination: ", myRoad.v)
     print("queue: ", myRoad.queue)
     print("q_size: ", myRoad.q_size)
     print("max_speed: ", myRoad.max_speed)
