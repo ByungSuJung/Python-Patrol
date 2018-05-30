@@ -18,7 +18,7 @@ class Map:
 		"""
 		#nodes, edges = util.retreiveMap(place=(47.608013, -122.335167),distance=1000)
 		center_pt = (center_lat, center_long)
-		G = ox.graph_from_point(center_pt, distance=300, network_type='drive') # distance = dist
+		G = ox.graph_from_point(center_pt, distance=500, network_type='drive') # distance = dist
 		self.node_map = self.set_intersections(G) #dictionary of nodes
 		#print(self.node_map)
 		self.edge_map = self.set_roads(G, self.node_map) #dictionary of edges

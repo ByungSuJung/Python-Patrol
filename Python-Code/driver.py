@@ -1,4 +1,6 @@
 from map import Map 
+import visualize 
+import matplotlib.pyplot as plt
 #import visualize
 
 m = Map()
@@ -19,7 +21,9 @@ Start the clock
 """
 print("finish constructing map")
 ts = 0
+visualize.drawMap(m.node_map, m.edge_map)
 
+plt.show()
 # check this one 
 while len(m.car_map) > 0:
     update()
@@ -28,13 +32,13 @@ while len(m.car_map) > 0:
             pass
         else:
             car.visited = False
-    #visualize.drawMap(m.node_map, m.edge_map)
     ts+=1
     #if ts == 500: 
         #break
 
 print("time", ts)
-
+plt.ion()
+plt.show()
     
 
 

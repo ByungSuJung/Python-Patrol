@@ -1,5 +1,5 @@
 from road import Road
-from node import Node
+from intersection import Intersection
 import numpy as np
 import copy, sys
 

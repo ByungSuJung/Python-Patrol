@@ -4,6 +4,7 @@ from sam_car import Car
 import numpy as np
 import utility as util
 import navigate as nv
+from intersection import Intersection
 
 car_data = None
 nodes = None
@@ -52,7 +53,7 @@ def drawCars(cars,draw=True):
     it = 0
     for icar in cars:
         cur_p = icar.current_position
-        if type(cur_p) is Node:
+        if type(cur_p) is Intersection:
             car_list[it,0] = cur_p.x
             car_list[it,1] = cur_p.y
             #print(cur_p.id,cur_p.x,cur_p.y)
