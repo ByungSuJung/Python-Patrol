@@ -9,7 +9,7 @@ class Car:
 		self.total_ts = 0
 		self.total_dist = 0
 		self.total_nodes_traveled = 0
-		start.add(self)
+		#start.add(self)
 
 	def set_path(self,paths):
 		self.paths = paths
