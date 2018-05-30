@@ -1,7 +1,8 @@
 from road import Road
 from node import Node
 import numpy as np
-import copy, sys
+import copy
+import sys
 
 nodes = None
 edges = None
