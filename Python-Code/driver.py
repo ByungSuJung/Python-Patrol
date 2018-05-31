@@ -36,8 +36,9 @@ def drawCars(cars, draw=True):
             car_list[row, 1] = (current_position.u.y  \
                             + (current_position.v.y \
                             - current_position.u.y)) * portion
+        row += 1
     if draw: 
-        car_data, = plt.plot(car_list[:,0],car_list[:,1],linestyle='none',\
+        car_data, = ax.plot(car_list[:,0],car_list[:,1],linestyle='none',\
             marker=c.CAR_PLOT_SHAPE,markersize=c.CAR_PLOT_SIZE,color='red')
     else: 
         return car_list
@@ -57,22 +58,22 @@ def update(cars):
 def drawMap(nodes,edges):
     if type(nodes) is dict:
         for key, node in nodes.items():
-            plt.plot(node.x,node.y,linestyle='none',\
+            ax.plot(node.x,node.y,linestyle='none',\
                 marker=c.NODE_PLOT_SHAPE,markersize=c.NODE_PLOT_SIZE)
         for key, edge in edges.items():
             if type(edge.u) is int:
                 u = nodes[str(edge.u)]
                 v = nodes[str(edge.v)]
-                plt.plot([u.x,v.x],[u.y,v.y],linestyle='-',\
+                ax.plot([u.x,v.x],[u.y,v.y],linestyle='-',\
                     color=c.EDGE_COLOR,linewidth=edge.num_lanes*c.PLOT_EDGE_WIDTH)
             else:
-                plt.plot([edge.u.x,edge.v.x],[edge.u.y,edge.v.y],linestyle='-',\
+                ax.plot([edge.u.x,edge.v.x],[edge.u.y,edge.v.y],linestyle='-',\
                     color=c.EDGE_COLOR,linewidth=edge.num_lanes*c.PLOT_EDGE_WIDTH)
     else:
         nl = np.array([i.id for i in nodes])
         for inode in nodes:
             #draw node
-            plt.plot(inode.x,inode.y,linestyle='none',\
+            ax.plot(inode.x,inode.y,linestyle='none',\
                     marker=c.NODE_PLOT_SHAPE,markersize=c.NODE_PLOT_SIZE)
         for iedge in edges:
             #draw edges
@@ -80,10 +81,10 @@ def drawMap(nodes,edges):
                 i = nodes[np.where(nl==str(iedge.u))[0][0]]
                 j = nodes[np.where(nl==str(iedge.v))[0][0]]
                 #print('plot',iedge.id,i.id,i.x,i.y,j.id,j.x,j.y)
-                plt.plot([i.x,j.x],[i.y,j.y],linestyle='-',\
+                ax.plot([i.x,j.x],[i.y,j.y],linestyle='-',\
                     color=c.EDGE_COLOR,linewidth=edge.num_lanes*c.PLOT_EDGE_WIDTH)
             else:
-                plt.plot([iedge.u.x,iedge.v.x],[iedge.u.y,iedge.v.y],\
+                ax.plot([iedge.u.x,iedge.v.x],[iedge.u.y,iedge.v.y],\
                     linestyle='-',color=c.EDGE_COLOR,linewidth=edge.num_lanes*c.PLOT_EDGE_WIDTH)
 
 def _init_graph(nodes,edges,cars):
@@ -141,7 +142,7 @@ def multi_simulations(number_of_simulation):
 #single simulation plotting (int) total_time_steps (list) individual_travel_time
 map = Map(CENTER_LATITUDE, CENTER_LONGITUDE,\
          DISTANCE_FROM_CENTER, NUM_CARS, \
-         random_init=RANDOM_START_DESTINATION, modified=False)       
+         random_init=RANDOM_START_DESTINATION, modified=False)      
 total_time, individual_travel_time = run_simulation(map)
 individual_travel_time = np.array(individual_travel_time)
 np.random.shuffle(individual_travel_time)

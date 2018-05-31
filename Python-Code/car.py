@@ -82,4 +82,6 @@ class Car(object):
         # modified dijsktra
         if self.current_position != self.path[0]:
             self.current_position.reset_nodes()
-            self.path = self.current_position.shortest_path(self.destination)
+            success, self.path = self.current_position.shortest_path(self.destination)
+            #while not success: 
+                #success, self.path = self.current_position.shortest_path(self.destination)

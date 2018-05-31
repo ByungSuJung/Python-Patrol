@@ -58,9 +58,11 @@ class Intersection(object):
 		while current != destination:
 			current.visited = True
 			current.relax_neighbors(priority_Q)
+			if priority_Q.empty(): 
+				return False, self.make_trail(current)
 			current = priority_Q.get_nowait()
 		
-		return self.make_trail(current)
+		return True, self.make_trail(current)
 
 	def make_trail(self, current):
 		result = [current]

@@ -17,14 +17,20 @@ class Map:
 		"""
 
 		"""
+		print("mapstart")
 		self.modified = modified
 		self.random_init = random_init
 		center_pt = (center_lat, center_long)
+		print("before getting data")
 		G = ox.graph_from_point(center_pt, distance=500, network_type='drive') # distance = dist
+		print("got data")
 		self.node_map = self.set_intersections(G) #dictionary of nodes
+		print("set node")
 		self.edge_map = self.set_roads(G, self.node_map) #dictionary of edges
+		print("set edge")
 		self.add_edges(self.node_map, self.edge_map) #adds edges to nodes"""
 		self.car_map = self.set_cars(G, self.edge_map, self.node_map, num_cars) #list of cars 
+		print("set car")
 		node_list = list(self.node_map.values())
 		for node in node_list: 
 			for car in self.car_map: 
@@ -89,17 +95,18 @@ class Map:
 					
 
 	def set_cars(self, G, edge_dict, node_dict, num_cars):
-
 		start, destination = self.init_trip(node_dict)
 		#start = node_dict[53213414]
 		#destination = node_dict[53213413]
 		#path = nx.dijkstra_path(G,start,destination)
 		print("passing dest", destination.id)
-		try :
-			path = start.shortest_path(destination)
-		except: 
+		success, path = start.shortest_path(destination)
+		print(success)
+		print(path)
+		while not success:  
+			print("insde first loop")
 			start, destination = self.init_trip(node_dict)
-			path = start.shortest_path(destination)
+			success, path = start.shortest_path(destination)
 
 		car_list = []
 		for i in range(num_cars):
@@ -122,11 +129,10 @@ class Map:
 			
 			if self.random_init: #if modified dijkstra
 				start, destination = self.init_trip(node_dict)
-				try :
-					path = start.shortest_path(destination)
-				except: 
+				success, path = start.shortest_path(destination)
+				while not success: 
 					start, destination = self.init_trip(node_dict)
-					path = start.shortest_path(destination)
+					success, path = start.shortest_path(destination)
 		return car_list
 
 	def init_trip(self, node_dict): 
