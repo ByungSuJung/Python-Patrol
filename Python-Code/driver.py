@@ -120,8 +120,8 @@ if __name__ == '__main__':
                     nodes[car.current_position.id].remove()
                     statement = '{1},{0} to {3},{2} time {4}'.format(car.start.x,car.start.y,car.dest.x,car.dest.y,car.total_ts)
                     #print('{1},{0} to {3},{2}'.format(car.start.x,car.start.y,car.dest.x,car.dest.y),car.total_ts)
-                    print(statement)
-                    print(statement,file=f)
+                    #print(statement)
+                    #print(statement,file=f)
                     cars.remove(car)
                 else:
                     total_time+=1
@@ -140,7 +140,7 @@ if __name__ == '__main__':
                             car.total_ts += 1 #Keep track of total time driving
                             continue
                     if nxt_move in edges:
-                        print(str(car.current_position),str(car.dest))
+                        #print(str(car.current_position),str(car.dest))
                         '''
                         Change True to modified
                         '''
@@ -153,9 +153,9 @@ if __name__ == '__main__':
                                 compute+=1
                             else:
                                 skip+=1
-                            print('re-calculated',compute,'skipped',skip)
+                            #print('re-calculated',compute,'skipped',skip)
                         if not edges[nxt_move].add():
-                            print('on hold edge',edges[nxt_move])
+                            #print('on hold edge',edges[nxt_move])
                             car.time_stopped += 1 #Keep track of time in traffic
                             car.total_ts += 1 #Keep track of total time driving
                             continue
@@ -165,7 +165,7 @@ if __name__ == '__main__':
                         car.total_dist += edges[nxt_move].length #Keep car distance travelled
                     elif nxt_move in nodes:
                         if not nodes[nxt_move].add():
-                            print('on hold node',nodes[nxt_move])
+                            #print('on hold node',nodes[nxt_move])
                             car.time_stopped += 1 #Keep track of time in traffic
                             car.total_ts += 1 #Keep track of total time driving
                             continue
@@ -193,52 +193,96 @@ if __name__ == '__main__':
             avg_inv_dist/len(cars_copy), sum_of_time)
 
 
-
-
-def normal_vs_modified(iterations = 4, cars = c.NUMBER_CARS):
+def normal_vs_modified(iterations = 1, cars = c.NUMBER_CARS):
 
     #Each row is a different field while each column is
     #a different iteration
-    norm_time = np.zeros((4, iterations))
-    mod_time = np.zeros((4, iterations))
+    comp_norm = np.zeros((4, 20))
+    comp_mod = np.zeros((4, 20))
+    num_cars = np.arange(1, 21) * 50#Segments of cars
 
-    #For each iteration run the simulation one with only normal
-    #and the other with modified calculations
-    for it in range(iterations):
-        print("Running Iteration: " + str(it+1) + "/" + str(iterations))
+    for car_count in range(len(num_cars)):
+        print("Car Count: ", num_cars[car_count])
+        #Each row is a different field while each column is
+        #a different iteration
+        norm_time = np.zeros((4, iterations))
+        mod_time = np.zeros((4, iterations))
 
-        print("Simulating Normal Dijkstra")
-        #Extract all the proper information for the results
-        norm_results = one_simulation(num_cars = cars) #Do a normal run
-        norm_time[0, it] = norm_results[0]
-        norm_time[1, it] = norm_results[1]
-        norm_time[2, it] = norm_results[2]
-        norm_time[3, it] = norm_results[3]
+        #For each iteration run the simulation one with only normal
+        #and the other with modified calculations
+        for it in range(iterations):
+            print("Running Iteration: " + str(it+1) + "/" + str(iterations))
 
-        print("Simulating Modified Dijkstra")
-        modi_results = one_simulation(num_modified = cars)
-        mod_time[0, it] = modi_results[0]
-        mod_time[1, it] = modi_results[1]
-        mod_time[2, it] = modi_results[2]
-        mod_time[3, it] = modi_results[3]
+            print("Simulating Normal Dijkstra")
+            #Extract all the proper information for the results
+            norm_results = one_simulation(num_cars = cars, num_modified = 0) #Do a normal run
+            norm_time[0, it] = norm_results[0]
+            norm_time[1, it] = norm_results[1]
+            norm_time[2, it] = norm_results[2]
+            norm_time[3, it] = norm_results[3]
 
-    print("----------Normal Dijkstra's Results----------")
-    print("Avg. Individual Time: ", np.average(norm_time[0, :]))
-    print("Avg. Individual Wait Time: ", np.average(norm_time[1, :]))
-    print("Avg. Individual Distance Travelled: ", np.average(norm_time[2, :]))
-    print("Avg. Sum of All Time: ", np.average(norm_time[3, :]))
-    print("---------------------------------------------\n")
+            print("Simulating Modified Dijkstra")
+            modi_results = one_simulation(num_cars = 0, num_modified = cars)
+            mod_time[0, it] = modi_results[0]
+            mod_time[1, it] = modi_results[1]
+            mod_time[2, it] = modi_results[2]
+            mod_time[3, it] = modi_results[3]
 
-    print("----------Modified Dijkstra's Results----------")
-    print("Avg. Individual Time: ", np.average(mod_time[0, :]))
-    print("Avg. Individual Wait Time: ", np.average(mod_time[1, :]))
-    print("Avg. Individual Distance Travelled: ", np.average(mod_time[2, :]))
-    print("Avg. Sum of All Time: ", np.average(mod_time[3, :]))
-    print("-----------------------------------------------\n\n")
+        '''print("----------Normal Dijkstra's Results----------")
+        print("Avg. Individual Time: ", np.average(norm_time[0, :]))
+        print("Avg. Individual Wait Time: ", np.average(norm_time[1, :]))
+        print("Avg. Individual Distance Travelled: ", np.average(norm_time[2, :]))
+        print("Avg. Sum of All Time: ", np.average(norm_time[3, :]))
+        print("---------------------------------------------\n")
+
+        print("----------Modified Dijkstra's Results----------")
+        print("Avg. Individual Time: ", np.average(mod_time[0, :]))
+        print("Avg. Individual Wait Time: ", np.average(mod_time[1, :]))
+        print("Avg. Individual Distance Travelled: ", np.average(mod_time[2, :]))
+        print("Avg. Sum of All Time: ", np.average(mod_time[3, :]))
+        print("-----------------------------------------------\n\n")'''
+
+        #Place the the values into the correct array section of the overall results
+        comp_norm[0, car_count] = np.average(norm_time[0, :])
+        comp_norm[1, car_count] = np.average(norm_time[1, :])
+        comp_norm[2, car_count] = np.average(norm_time[2, :])
+        comp_norm[3, car_count] = np.average(norm_time[3, :])
+
+        comp_mod[0, car_count] = np.average(mod_time[0, :])
+        comp_mod[1, car_count] = np.average(mod_time[1, :])
+        comp_mod[2, car_count] = np.average(mod_time[2, :])
+        comp_mod[3, car_count] = np.average(mod_time[3, :])
+
+    #-----------------------Graph normal vs modified------------------------#
+    plt.clf()
+    plt.plot(num_cars, comp_norm[0], '-', num_cars, comp_mod[0], '--')
+    plt.title("Normal Dijkstra's vs Modified Dijkstra's")
+    plt.xlabel("Number of Cars")
+    plt.ylabel("Average Individual Time")
+    plt.show()
+
+    plt.plot(num_cars, comp_norm[1], '-', num_cars, comp_mod[1], '--')
+    plt.title("Normal Dijkstra's vs Modified Dijkstra's")
+    plt.xlabel("Number of Cars")
+    plt.ylabel("Average Individual Wait Time")
+    plt.show()
+
+    plt.plot(num_cars, comp_norm[2], '-', num_cars, comp_mod[2], '--')
+    plt.title("Normal Dijkstra's vs Modified Dijkstra's")
+    plt.xlabel("Number of Cars")
+    plt.ylabel("Average Individual Distance Travelled")
+    plt.show()
+
+    plt.plot(num_cars, comp_norm[3], '-', num_cars, comp_mod[3], '--')
+    plt.title("Normal Dijkstra's vs Modified Dijkstra's")
+    plt.xlabel("Number of Cars")
+    plt.ylabel("Average Sum of Time")
+    plt.show()
+    #-----------------------------------------------------------------------#
 
 normal_vs_modified()
 #----------------------------Test that the graphing is working properly-----------------------------#
-'''results = one_simulation(distance=500, num_cars = 500, num_modified = 500, animated = False)
+'''results = one_simulation(distance=500, num_cars = 500, num_modified = 500, animated = True)
 
 print("Avg. Individual Time: ", results[0])
 print("Avg. Individual Wait Time: ", results[1])
