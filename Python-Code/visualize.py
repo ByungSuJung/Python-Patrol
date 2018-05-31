@@ -47,7 +47,7 @@ def drawMap(nodes,edges):
     #plt.plot(test_end[0],test_end[1],color='red',linestyle='none',marker='o',markersize=10)
 
 
-def drawCars(cars,draw=True):
+def drawCars(cars,nodes=None, draw=True):
     global car_data
     car_list = np.zeros((len(cars),2))
     it = 0
@@ -70,9 +70,9 @@ def drawCars(cars,draw=True):
     else:
         return car_list
 
-def update(cars):
+def update(cars, nodes=None):
     global car_data
-    car_list = drawCars(cars,draw=False)
+    car_list = drawCars(cars,nodes=nodes, draw=False)
 
     car_data.set_xdata(car_list[:,0])
     car_data.set_ydata(car_list[:,1])
