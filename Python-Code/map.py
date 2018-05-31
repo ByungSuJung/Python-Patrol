@@ -12,25 +12,18 @@ class Map:
 	"""
 
 	"""
-	def __init__(self, center_lat=47.608013, center_long=-122.335167, dist=150, num_cars=100):
+	def __init__(self, center_lat, center_long, dist, num_cars,\
+				 random_init=False, modified=False):
 		"""
 
 		"""
-		#nodes, edges = util.retreiveMap(place=(47.608013, -122.335167),distance=1000)
+		self.modified = modified
+		self.random_init = random_init
 		center_pt = (center_lat, center_long)
 		G = ox.graph_from_point(center_pt, distance=500, network_type='drive') # distance = dist
 		self.node_map = self.set_intersections(G) #dictionary of nodes
-		#print(self.node_map)
 		self.edge_map = self.set_roads(G, self.node_map) #dictionary of edges
-		#print(self.edge_map)
 		self.add_edges(self.node_map, self.edge_map) #adds edges to nodes"""
-		#self.nodes = util.node_to_object(nodes)
-		#self.edges = util.edge_to_object(edges)
-		#for key, edge in self.edges.items():
-		#	self.nodes[str(edge.u)].add_edge(edge))
-		#	self.nodes[str(edge.u)].cap += edge.num_lanes
-		#	self.nodes[str(edge.v)].add_edge(edge)
-		#	self.nodes[str(edge.v)].cap += edge.num_lanes
 		self.car_map = self.set_cars(G, self.edge_map, self.node_map, num_cars) #list of cars 
 		node_list = list(self.node_map.values())
 		for node in node_list: 
@@ -39,9 +32,6 @@ class Map:
 					node.add(car)
 	
 	def set_intersections(self, G):
-		"""
-
-		"""
 		node_dict = {}
 		for n in G.nodes(data=True):
 			name = n[1]['osmid']
@@ -56,9 +46,6 @@ class Map:
 		return node_dict
 
 	def set_roads(self, G, node_dict):
-		"""
-
-		"""
 		edge_dict = {}
 		id = 0
 		for e in G.edges(data=True):
@@ -102,19 +89,18 @@ class Map:
 					
 
 	def set_cars(self, G, edge_dict, node_dict, num_cars):
-		"""
 
-		"""
-
-		start = rn.choice(list(node_dict.values()))
-		destination = rn.choice(list(node_dict.values()))
-		while start == destination: 
-			destination = rn.choice(list(node_dict.values()))
+		start, destination = self.init_trip(node_dict)
 		#start = node_dict[53213414]
 		#destination = node_dict[53213413]
 		#path = nx.dijkstra_path(G,start,destination)
 		print("passing dest", destination.id)
-		path = start.shortest_path(destination)
+		try :
+			path = start.shortest_path(destination)
+		except: 
+			start, destination = self.init_trip(node_dict)
+			path = start.shortest_path(destination)
+
 		car_list = []
 		for i in range(num_cars):
 			"""
@@ -128,12 +114,24 @@ class Map:
 			would be either null or the closest edge
 			choosing option B 
 			"""
-			#start = rn.choice(node_dict.keys())
-			#destination = rn.choice(node_dict.keys())
 			"""
 			if destination == start:
 				then what???
 			"""
-			#path = nx.dijkstra_path(G,start,destination)
-			car_list.append(Car(start, destination, map=self, path=path))
+			car_list.append(Car(start, destination, map=self, path=path, modified=self.modified))
+			
+			if self.random_init: #if modified dijkstra
+				start, destination = self.init_trip(node_dict)
+				try :
+					path = start.shortest_path(destination)
+				except: 
+					start, destination = self.init_trip(node_dict)
+					path = start.shortest_path(destination)
 		return car_list
+
+	def init_trip(self, node_dict): 
+		start = rn.choice(list(node_dict.values()))
+		destination = rn.choice(list(node_dict.values()))
+		while start == destination: 
+			destination = rn.choice(list(node_dict.values()))
+		return start, destination
