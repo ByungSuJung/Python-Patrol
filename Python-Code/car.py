@@ -1,6 +1,7 @@
 from road import Road
 class Car:
 	def __init__(self,start,dest,modified=False):
+		self.id=None
 		self.start = start
 		self.current_position = start
 		self.dest = dest

@@ -14,7 +14,7 @@ def init(n,e,nk,ek):
     node_keys = nk
     edge_keys = ek
 
-def dk(start,end,weight_on_length=1.0):
+def dk(start,end,weight_on_length=1.0,parallel=False):
     def _weight(time,capacity):
         return capacity * 100 * (1-weight_on_length) + time * 100 * (weight_on_length)
     weights = {}
@@ -89,7 +89,10 @@ def dk(start,end,weight_on_length=1.0):
         history.append(tmp_run)
         last_run = tmp_run
         tmp_run = []
-        
+    if parallel:
+        fff = _expand_path(paths[str(end)])
+        fff = [str(f) for f in fff]
+        return tuple(fff)
     return _expand_path(paths[str(end)])
 
 def _expand_path(paths):
