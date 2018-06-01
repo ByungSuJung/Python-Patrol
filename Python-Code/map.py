@@ -2,6 +2,7 @@ import osmnx as ox
 import networkx as nx 
 import numpy as np
 import random as rn 
+import constants as c
 from intersection import Intersection
 from road import Road 
 from car import Car
@@ -10,8 +11,9 @@ class Map:
 	"""
 
 	"""
-	def __init__(self, center_lat, center_long, dist, num_cars,\
-				 random_init=False, modified=False, traffic_tolerance=0.75):
+	def __init__(self, center_lat=c.SEA_LATITUDE, center_long=c.SEA_LONGITUDE, \
+	dist=500, num_cars=100, random_init=True, modified=False, \
+	traffic_tolerance=0.75):
 		"""
 
 		"""
@@ -21,14 +23,14 @@ class Map:
 		self.random_init = random_init
 		center_pt = (center_lat, center_long)
 		print("before getting data")
-		G = ox.graph_from_point(center_pt, distance=dist, network_type='drive', simplify=True) # distance = dist
+		G = ox.graph_from_point(center_pt, distance=dist, network_type='drive') 
 		print("got data")
 		self.node_map = self.set_intersections(G) #dictionary of nodes
 		print("set node")
 		self.edge_map = self.set_roads(G, self.node_map) #dictionary of edges
 		print("set edge")
 		self.add_edges(self.node_map, self.edge_map) #adds edges to nodes"""
-		self.car_map = self.set_cars(G, self.edge_map, self.node_map, num_cars) #list of cars 
+		self.car_map = self.set_cars(G, self.edge_map, self.node_map, num_cars)
 		print("set car")
 		node_list = list(self.node_map.values())
 		for node in node_list: 
@@ -99,43 +101,29 @@ class Map:
 		#start = node_dict[53213414]
 		#destination = node_dict[53144260]
 		#path = nx.dijkstra_path(G,start,destination)
-		print("passing dest", destination.id)
+		#print("passing dest", destination.id)
 		success, path = start.shortest_path(destination, modified=self.modified)
-		print(success)
-		print(path)
+		#print(success)
+		#print(path)
 		if not success:  
-			print("insde first loop")
+			#print("insde first loop")
 			start, destination = self.init_trip(node_dict)
 			success, path = start.shortest_path(destination, modified=self.modified)
 
 		car_list = []
 		for i in range(num_cars):
-			"""
-			if rand node is full:
-			Option A 
-			init car on a diff node 
-			option B
-			init car on on next t-frame
-			option C
-			init car on nearest road obj where start node
-			would be either null or the closest edge
-			choosing option B 
-			"""
-			"""
-			if destination == start:
-				then what???
-			"""
-			car_list.append(Car(start, destination, map=self, path=path, modified=self.modified, traffic_tolerance=self.traffic_tolerance))
+			car_list.append(Car(start, destination, map=self, path=path,\
+			modified=self.modified, traffic_tolerance=self.traffic_tolerance))
 			
 			if self.random_init: #if modified dijkstra
-				print("assigning each car start and destnination")
+				#print("assigning each car start and destnination")
 				start, destination = self.init_trip(node_dict)
 				start.reset_nodes()
 				success, path = start.shortest_path(destination, modified=self.modified)
 
 				while not success: 
-					print("failed so go again")
-					print(path)
+					#print("failed so go again")
+					#print(path)
 					start, destination = self.init_trip(node_dict)
 					start.reset_nodes()
 					success, path = start.shortest_path(destination, modified=self.modified)

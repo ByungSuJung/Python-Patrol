@@ -50,8 +50,8 @@ class Intersection(object):
 
 
 	def shortest_path(self, destination, modified=False): 
-		print("start point = ", self.id)
-		print("passed in destination = ", destination.id)
+		#print("start point = ", self.id)
+		#print("passed in destination = ", destination.id)
 		self.value = 0
 		priority_Q = PriorityQueue()
 		current = self

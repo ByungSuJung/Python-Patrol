@@ -12,6 +12,7 @@ class Car(object):
         self.total_times_for_car = 0
         self.path = path # list of nodes from start to destination
         self.next_to_visit = path[1]
+        #print("___this is the cars initial path___", self.path)
         self.visited = False
         self.done = False
         self.modified = modified
@@ -30,25 +31,25 @@ class Car(object):
             if type(self.current_position) is intersection:
                 can_move = self.try_move_from_node()
                 if can_move:
-                    print("intersection to edge")
-                    print("car id", self.map.car_map.index(self))
-                    print(type(self.current_position), " ", self.current_position.id)
+                    #print("intersection to edge")
+                    #print("car id", self.map.car_map.index(self))
+                    #print(type(self.current_position), " ", self.current_position.id)
                     self.current_position.remove(self)
                     if not self.next_to_visit in self.path: 
                         temp = self.path.index(self.current_position) + 1 # index
                         self.next_to_visit = self.path[temp] # next in given list of path
                     self.next_to_visit.add(self)
                     self.current_position = self.next_to_visit
-                    print(type(self.current_position), " ", self.current_position.id)
-                    print("HELPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP")
+                    #print(type(self.current_position), " ", self.current_position.id)
+                    #print("HELPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP")
                     if self.current_position in self.path: 
-                        print("HELPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP")
+                        #print("HELPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP")
                         temp = self.path.index(self.current_position) + 1 # index
                         self.next_to_visit = self.path[temp] # next in given list of path
-                        print("finished")
+                        #print("finished")
                     else: 
-                        print("error in intersection to edge ~~~~~~~~~~~~~~~~~~~~~~~~~~~``")
-                        print(self.current_position.id)
+                        #print("error in intersection to edge ~~~~~~~~~~~~~~~~~~~~~~~~~~~``")
+                        #print(self.current_position.id)
                         temp = self.path.index(self.current_position) + 1 # index
                         self.next_to_visit = self.path[temp] # next in given list of path
                     
@@ -57,7 +58,7 @@ class Car(object):
             else: # if on edge(road) 
                 can_move = self.try_move_from_edge() 
                 if can_move: 
-                    print("edge to intersection")
+                    #print("edge to intersection")
                     self.next_to_visit.add(self)
                     self.current_position.remove(self) 
                     print("current_position:", self.current_position.id)

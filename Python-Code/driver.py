@@ -1,48 +1,19 @@
 from map import Map 
 import matplotlib
-#import visualize 
 import matplotlib.pyplot as plt
 import constants as c
 import numpy as np
 from intersection import Intersection
 from car import Car
-#import visualize
 
 # CONSTANTS 
-CENTER_LATITUDE = 47.608013
-CENTER_LONGITUDE = -122.335167
-DISTANCE_FROM_CENTER = 500
-NUM_CARS = 1000
 VISUALIZATION = True
-RANDOM_START_DESTINATION = False
-NUM_SIMULATION = 10
-TRAFFIC_TOLERANCE = 0.75  
+#RAND_STRT_DEST = False
+#NUM_SIMULATION = 10
+#TRAF_TOL = 0.75  
 car_data = None
 
 fig, ax = plt.subplots()
-"""
-def drawMap(nodes,edges,text=False):
-    '''Plot nodes and edges
-    Args:
-        nodes: dict, dictionary of all nodes
-        edges: dict, dictionary of all edges
-        text: bool, if display edge id on map
-    '''
-    #- plot each node in dictionary using their coordinates
-    for key, node in nodes.items():
-        ax.plot(node.x,node.y,linestyle='none',\
-            marker=c.NODE_PLOT_SHAPE,markersize=c.NODE_PLOT_SIZE)
-    #- plot each edge in dictionary using their parents' coordinates
-    for key, edge in edges.items():
-        u = nodes[str(edge.u)]
-        v = nodes[str(edge.v)]
-        ax.plot([u.x,v.x],[u.y,v.y],linestyle='-',\
-            color=c.EDGE_COLOR,linewidth=edge.num_lanes*c.PLOT_EDGE_WIDTH)
-                
-                    
-def drawPoint(pt1):
-    ax.plot(pt1[0],pt1[1],linestyle='none',marker='o',markersize=12,color='red')
-"""
 
 def drawCars(cars,draw=True):
     '''Plot nodes and edges
@@ -96,44 +67,6 @@ def _init_graph(nodes,edges,cars,text=False):
     drawCars(cars)
 
 
-
-"""
-def drawCars(cars, draw=True):
-    global car_data
-    car_list = np.zeros((len(cars), 2))
-    row = 0
-    for car in cars: 
-        current_position = car.current_position
-        if type(current_position) is Intersection: 
-            car_list[row, 0] = current_position.x
-            car_list[row, 1] = current_position.y
-        else: 
-            portion = car.ts_on_current_position / car.current_position.time_steps
-            car_list[row, 0] = (current_position.u.x  \
-                            + (current_position.v.x \
-                            - current_position.u.x)) * portion
-            car_list[row, 1] = (current_position.u.y  \
-                            + (current_position.v.y \
-                            - current_position.u.y)) * portion
-        row += 1
-    if draw: 
-        car_data, = ax.plot(car_list[:,0],car_list[:,1],linestyle='none',\
-            marker=c.CAR_PLOT_SHAPE,markersize=c.CAR_PLOT_SIZE,color='red')
-    else: 
-        return car_list
-
-def update(cars): 
-    global car_data
-    car_list = drawCars(cars, draw=False)
-
-    car_data.set_xdata(car_list[:,0])
-    car_data.set_ydata(car_list[:,1])
-
-    plt.draw()
-    plt.pause(c.ANIMATION_SEG)
-
-# for image initiation 
-"""
 def drawMap(nodes,edges):
     if type(nodes) is dict:
         for key, node in nodes.items():
@@ -165,12 +98,7 @@ def drawMap(nodes,edges):
             else:
                 ax.plot([iedge.u.x,iedge.v.x],[iedge.u.y,iedge.v.y],\
                     linestyle='-',color=c.EDGE_COLOR,linewidth=edge.num_lanes*c.PLOT_EDGE_WIDTH)
-"""
-def _init_graph(nodes,edges,cars):
-    drawMap(nodes,edges)
-    drawCars(cars)
 
-"""
 def updateStatus(map):
     individual_travel_time = []
     for car in map.car_map:
@@ -199,70 +127,141 @@ def run_simulation(map, visualization=False):
         total_time += 1
         if visualization:
             update(map.car_map)
-    plt.ion()
-    plt.show()
-    print("time", total_time)
+            plt.ion()
+            #plt.show()
+    #print("time", total_time)
     return total_time, individual_travel_time
 
-def multi_simulations(number_of_simulation): 
+def multi_simulations(maps, visualization=False) : 
     total_time_list = []
     avg_individual_time = []
-    m_list = []
-    for i in np.arange(number_of_simulation):
-        map = Map(CENTER_LATITUDE, CENTER_LONGITUDE,\
-            DISTANCE_FROM_CENTER, NUM_CARS, \
-            random_init=RANDOM_START_DESTINATION, modified=False)
-        m_list.append(map)
-    for map in m_list:
-        total_time, individual_travel_time = \
-            run_simulation(map, visualization=False)
+    for m in maps:
+        total_time, individual_travel_time = run_simulation(m, \
+        visualization=visualization)
+        
         total_time_list.append(total_time)
         individual_travel_time = np.array(individual_travel_time)
+
         avg_individual_time.append(np.mean(individual_travel_time))
     return total_time_list, avg_individual_time
         
 
 #single simulation plotting (int) total_time_steps (list) individual_travel_time
-map = Map(CENTER_LATITUDE, CENTER_LONGITUDE,\
-         DISTANCE_FROM_CENTER, NUM_CARS, \
-         random_init=RANDOM_START_DESTINATION, modified=True, traffic_tolerance=TRAFFIC_TOLERANCE)      
-total_time, individual_travel_time = run_simulation(map, visualization=VISUALIZATION)
-individual_travel_time = np.array(individual_travel_time)
-np.random.shuffle(individual_travel_time)
-x = np.arange(len(individual_travel_time))
-
+#t_time, i_travel_time = run_simulation(Map())
 """
-map = Map(CENTER_LATITUDE, CENTER_LONGITUDE,\
-         DISTANCE_FROM_CENTER, NUM_CARS, \
-         random_init=RANDOM_START_DESTINATION, modified=False)      
-total_time, individual_travel_time = run_simulation(map, visualization=VISUALIZATION)
+Start of Analysis
 """
 """
-print("total_time_step", total_time)
-plt.plot(x, individual_travel_time)
-plt.show()
+Checks for 
 """
+non_mod_maps = []
+mod_maps = []
 
+x = None
+#Varying num cars
+car_numbers_to_test = np.arange(100,1001,100) #100, 200, 300..1000
+#car_numbers_to_test = np.arange(100,201,50) #100,150, 200
+
+for i in car_numbers_to_test:
+    print(i)
+    non_mod_maps.append(Map(num_cars=i))
+    mod_maps.append(Map(num_cars=i, modified=True))
+
+#print(len(non_mod_maps))
+#print(len(car_numbers_to_test))
+total_time, avg_ind_time = multi_simulations(non_mod_maps)
+m_total_time, m_avg_ind_time = multi_simulations(mod_maps)
+
+print("now displaying figure 1")
+plt.title("Non-mod vs mod: total-time")
+plt.figure()
+plt.plot(car_numbers_to_test, total_time, "-o")
+plt.plot(car_numbers_to_test, m_total_time, "-o")
+plt.xlabel("number of cars")
+plt.ylabel("total-time")
+
+print("now displaying figure 2")
+plt.title("Non-mod vs mod: avg ind time")
+plt.figure()
+plt.plot(car_numbers_to_test, avg_ind_time, "-o")
+plt.plot(car_numbers_to_test, m_avg_ind_time, "-o")
+plt.xlabel("number of cars")
+plt.ylabel("avg in time")
 
 """
-total_time_list, avg_individual_time = multi_simulations(NUM_SIMULATION)
-
-x = np.arange(len(total_time_list))
-plt.figure(0)
-plt.plot(x, total_time_list)
-plt.show()
-
-plt.figure(1)
-x = np.arange(len(avg_individual_time))
-plt.plot(x, avg_individual_time)
-plt.show()
+Checks For:
 """
+def analysis():
+    non_mod_maps = []
+    mod_maps = []
+    #Varying num cars
+    radii_to_test = np.arange(200,1001,100) #200, 300, 400..1000
+    #radii_to_test = np.arange(200,1001,100) #200, 300, 400..1000
 
-    
+    for i in car_numbers_to_test:
+        print(i)
+        non_mod_maps.append(Map(dist=i))
+        mod_maps.append(Map(dist=i, modified=True))
 
+    #print(len(non_mod_maps))
+    #print(len(car_numbers_to_test))
+    total_time, avg_ind_time = multi_simulations(non_mod_maps)
+    m_total_time, m_avg_ind_time = multi_simulations(mod_maps)
 
+    print("now displaying figure 3")
+    plt.title("Non-mod vs mod: total-time")
+    plt.figure()
+    plt.plot(radii_to_test, total_time, "-o")
+    plt.plot(radii_to_test , m_total_time, "-o")
+    plt.xlabel("map radius")
+    plt.ylabel("average total time")
 
+    print("now displaying figure 4")
+    plt.title("Non-mod vs mod: avg ind-time")
+    plt.figure()
+    plt.plot(radii_to_test, avg_ind_time, "-o")
+    plt.plot(radii_to_test , m_avg_ind_time, "-o")
+    plt.xlabel("map radius")
+    plt.ylabel("average ind time")
 
+    """
+    Checks For:
+    """
+    non_mod_maps = []
+    mod_maps = []
+    #Varying num cars
+    caps_to_test = np.arange(0.1,1.1,0.1) #0.1, 0.2, 0.3...1
+    caps_to_test = np.arange(0.1,1.1,0.5) #0.1, 0.2, 0.3...1
+
+    for i in car_numbers_to_test:
+        print(i)
+        non_mod_maps.append(Map(traffic_tolerance=i))
+        mod_maps.append(Map(traffic_tolerance=i, modified=True))
+
+    #print(len(non_mod_maps))
+    #print(len(car_numbers_to_test))
+    total_time, avg_ind_time = multi_simulations(non_mod_maps)
+    m_total_time, m_avg_ind_time = multi_simulations(mod_maps)
+
+    print("now displaying figure 5")
+    plt.title("Non-mod vs mod: total-time")
+    plt.figure()
+    plt.plot(caps_to_test, total_time, "-o")
+    plt.plot(caps_to_test , m_total_time, "-o")
+    plt.xlabel("traffic tolerance")
+    plt.ylabel("total-time")
+
+    print("now displaying figure 6")
+    plt.title("Non-mod vs mod: avg ind time")
+    plt.figure()
+    plt.plot(caps_to_test, avg_ind_time, "-o")
+    plt.plot(caps_to_test , m_avg_ind_time, "-o")
+    plt.xlabel("traffic tolerance")
+    plt.ylabel("avg ind-time")
+
+    plt.show()
+
+analysis()
 
 
     
