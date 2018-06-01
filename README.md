@@ -3,11 +3,11 @@ This is a class project that our team (Python Patrol) has created at University 
 
 Project description:
 	This project simulates traffic in any location on earth. Cars are set to have random starting points and destinations. The goal of this project is to study the effect on traffic by calculating weight on edges using different capacity/time step ratio. The program also provide visualization option (may be laggy).
-
-
+	
+	
 Pre-Request:
 
-1.	Install osmnx package
+Install osmnx package
 
 	conda install -c conda-forge osmnx
 	
@@ -15,9 +15,11 @@ Pre-Request:
 	
 	pip install osmnx
 	
-2.	Git clone https://github.com/T-Wick/Python-Patrol
+Download Project
 
-3. 	(Parallel branch only) pip install joblib
+Git clone https://github.com/T-Wick/Python-Patrol
+
+(Parallel branch only) pip install joblib
 
 Running the project:
 
