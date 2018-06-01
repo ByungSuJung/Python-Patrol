@@ -12,7 +12,7 @@ class Map:
 
 	"""
 	def __init__(self, center_lat=c.SEA_LATITUDE, center_long=c.SEA_LONGITUDE, \
-	dist=500, num_cars=100, random_init=True, modified=False, \
+	dist=700, num_cars=1000, random_init=True, modified=False, \
 	traffic_tolerance=0.75):
 		"""
 

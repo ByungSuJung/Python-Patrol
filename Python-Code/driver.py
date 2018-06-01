@@ -105,8 +105,8 @@ def updateStatus(map):
         car.update()
         if car.done:
             individual_travel_time.append(car.total_times_for_car)
-            print("car's trip history--------------------------------------")
-            print(car.path)
+            #print("car's trip history--------------------------------------")
+            #print(car.path)
             map.car_map.remove(car)
             del car
     return individual_travel_time
