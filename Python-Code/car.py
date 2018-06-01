@@ -31,17 +31,22 @@ class Car(object):
                     print("intersection to edge")
                     print("car id", self.map.car_map.index(self))
                     print(type(self.current_position), " ", self.current_position.id)
-                    self.next_to_visit.add(self)
                     self.current_position.remove(self)
-                    self.current_position = self.next_to_visit
                     print(type(self.current_position), " ", self.current_position.id)
-                    
+                    if not self.next_to_visit in self.path: 
+                        temp = self.path.index(self.current_position) + 1 # index
+                        self.next_to_visit = self.path[temp] # next in given list of path
+                    self.next_to_visit.add(self)
+                    self.current_position = self.next_to_visit
+
                     if self.current_position in self.path: 
-                        print(self.current_position.id)
                         temp = self.path.index(self.current_position) + 1 # index
                         self.next_to_visit = self.path[temp] # next in given list of path
                     else: 
+                        print("error in intersection to edge ~~~~~~~~~~~~~~~~~~~~~~~~~~~``")
                         print(self.current_position.id)
+                        temp = self.path.index(self.current_position) + 1 # index
+                        self.next_to_visit = self.path[temp] # next in given list of path
                     
                 else: 
                     pass
@@ -62,6 +67,7 @@ class Car(object):
                             self.next_to_visit = self.path[temp]
                         else:
                             print(self.current_position.id)
+                            print(self.path)
                             temp = self.path.index(self.current_position) + 1
                             print("temp index = ", temp)
                             print("length of list = ", len(self.path))

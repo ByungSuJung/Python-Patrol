@@ -22,7 +22,7 @@ class Map:
 		self.random_init = random_init
 		center_pt = (center_lat, center_long)
 		print("before getting data")
-		G = ox.graph_from_point(center_pt, distance=dist, network_type='drive') # distance = dist
+		G = ox.graph_from_point(center_pt, distance=dist, network_type='drive', simplify=True) # distance = dist
 		print("got data")
 		self.node_map = self.set_intersections(G) #dictionary of nodes
 		print("set node")
@@ -101,13 +101,13 @@ class Map:
 	def set_cars(self, G, edge_dict, node_dict, num_cars):
 		start, destination = self.init_trip(node_dict)
 		#start = node_dict[53213414]
-		#destination = node_dict[53213413]
+		#destination = node_dict[53144260]
 		#path = nx.dijkstra_path(G,start,destination)
 		print("passing dest", destination.id)
 		success, path = start.shortest_path(destination, modified=self.modified)
 		print(success)
 		print(path)
-		while not success:  
+		if not success:  
 			print("insde first loop")
 			start, destination = self.init_trip(node_dict)
 			success, path = start.shortest_path(destination, modified=self.modified)

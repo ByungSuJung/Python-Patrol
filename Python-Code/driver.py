@@ -10,10 +10,10 @@ from intersection import Intersection
 # CONSTANTS 
 CENTER_LATITUDE = 47.608013
 CENTER_LONGITUDE = -122.335167
-DISTANCE_FROM_CENTER = 300
-NUM_CARS = 100
-VISUALIZATION = True
-RANDOM_START_DESTINATION = True
+DISTANCE_FROM_CENTER = 500
+NUM_CARS = 1
+VISUALIZATION = False
+RANDOM_START_DESTINATION = False
 NUM_SIMULATION = 10
 car_data = None
 
@@ -30,7 +30,7 @@ def drawCars(cars, draw=True):
             car_list[row, 0] = current_position.x
             car_list[row, 1] = current_position.y
         else: 
-            portion = car.ts_on_current_position / 100
+            portion = car.ts_on_current_position / 10
             car_list[row, 0] = (current_position.u.x  \
                             + (current_position.v.x \
                             - current_position.u.x)) * portion
@@ -98,6 +98,8 @@ def updateStatus(map):
         car.update()
         if car.done:
             individual_travel_time.append(car.total_times_for_car)
+            print("car's trip history--------------------------------------")
+            print(car.path)
             map.car_map.remove(car)
             del car
     return individual_travel_time
@@ -144,11 +146,18 @@ def multi_simulations(number_of_simulation):
 #single simulation plotting (int) total_time_steps (list) individual_travel_time
 map = Map(CENTER_LATITUDE, CENTER_LONGITUDE,\
          DISTANCE_FROM_CENTER, NUM_CARS, \
-         random_init=RANDOM_START_DESTINATION, modified=False)      
+         random_init=RANDOM_START_DESTINATION, modified=True)      
 total_time, individual_travel_time = run_simulation(map, visualization=VISUALIZATION)
 individual_travel_time = np.array(individual_travel_time)
 np.random.shuffle(individual_travel_time)
 x = np.arange(len(individual_travel_time))
+
+"""
+map = Map(CENTER_LATITUDE, CENTER_LONGITUDE,\
+         DISTANCE_FROM_CENTER, NUM_CARS, \
+         random_init=RANDOM_START_DESTINATION, modified=False)      
+total_time, individual_travel_time = run_simulation(map, visualization=VISUALIZATION)
+"""
 """
 print("total_time_step", total_time)
 plt.plot(x, individual_travel_time)
