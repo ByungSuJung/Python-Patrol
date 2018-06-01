@@ -11,10 +11,11 @@ from intersection import Intersection
 CENTER_LATITUDE = 47.608013
 CENTER_LONGITUDE = -122.335167
 DISTANCE_FROM_CENTER = 500
-NUM_CARS = 2
+NUM_CARS = 10
 VISUALIZATION = False
-RANDOM_START_DESTINATION = False
+RANDOM_START_DESTINATION = True
 NUM_SIMULATION = 10
+TRAFFIC_TOLERANCE = 0.75  
 car_data = None
 
 fig, ax = plt.subplots()
@@ -146,7 +147,7 @@ def multi_simulations(number_of_simulation):
 #single simulation plotting (int) total_time_steps (list) individual_travel_time
 map = Map(CENTER_LATITUDE, CENTER_LONGITUDE,\
          DISTANCE_FROM_CENTER, NUM_CARS, \
-         random_init=RANDOM_START_DESTINATION, modified=True)      
+         random_init=RANDOM_START_DESTINATION, modified=True, traffic_tolerance=TRAFFIC_TOLERANCE)      
 total_time, individual_travel_time = run_simulation(map, visualization=VISUALIZATION)
 individual_travel_time = np.array(individual_travel_time)
 np.random.shuffle(individual_travel_time)

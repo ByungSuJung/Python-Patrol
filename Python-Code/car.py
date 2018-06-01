@@ -2,7 +2,9 @@ from road import Road as road
 from intersection import Intersection as intersection 
 	
 class Car(object):
-    def __init__(self, start, destination, map=None, path=None, modified=False):
+    def __init__(self, start, destination, map=None, path=None, modified=False, traffic_tolerance=0.75):
+        self.TRAFFIC_TOLERANCE = traffic_tolerance
+
         self.map = map
         self.current_position = start
         self.destination = destination 
@@ -56,9 +58,9 @@ class Car(object):
                     print("edge to intersection")
                     self.next_to_visit.add(self)
                     self.current_position.remove(self) 
-                    self.current_position = self.next_to_visit
                     print("current_position:", self.current_position.id)
                     print("self.destination: ", self.destination.id)
+                    self.current_position = self.next_to_visit
                     if self.current_position != self.destination:
                         if self.current_position in self.path:
                             temp = self.path.index(self.current_position) + 1
@@ -88,7 +90,10 @@ class Car(object):
         return False
             
     def try_move_from_node(self):
-        self.find_shortest_path()
+        if self.modified: 
+            temp_value = self.next_to_visit.q_size / self.next_to_visit.capacity
+            if temp_value > self.TRAFFIC_TOLERANCE:
+                self.find_shortest_path()
         return self.try_move_from_edge()
     
     def try_move_from_edge(self):

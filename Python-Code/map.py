@@ -13,11 +13,12 @@ class Map:
 
 	"""
 	def __init__(self, center_lat, center_long, dist, num_cars,\
-				 random_init=False, modified=False):
+				 random_init=False, modified=False, traffic_tolerance=0.75):
 		"""
 
 		"""
 		print("mapstart")
+		self.traffic_tolerance = traffic_tolerance
 		self.modified = modified
 		self.random_init = random_init
 		center_pt = (center_lat, center_long)
@@ -129,7 +130,7 @@ class Map:
 			if destination == start:
 				then what???
 			"""
-			car_list.append(Car(start, destination, map=self, path=path, modified=self.modified))
+			car_list.append(Car(start, destination, map=self, path=path, modified=self.modified, traffic_tolerance=self.traffic_tolerance))
 			
 			if self.random_init: #if modified dijkstra
 				print("assigning each car start and destnination")
