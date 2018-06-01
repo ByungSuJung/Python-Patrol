@@ -6,8 +6,6 @@ from intersection import Intersection
 from road import Road 
 from car import Car
 
-import utility as util
-
 class Map:
 	"""
 
