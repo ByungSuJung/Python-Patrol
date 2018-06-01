@@ -15,41 +15,22 @@ test_start = None
 test_end = None
 
 def drawMap(nodes,edges,text=False):
-    #matplotlib.use('GTKAgg') 
-    if type(nodes) is dict:
-        for key, node in nodes.items():
-            plt.plot(node.x,node.y,linestyle='none',\
-                marker=c.NODE_PLOT_SHAPE,markersize=c.NODE_PLOT_SIZE)
-        for key, edge in edges.items():
-            if type(edge.u) is int:
-                u = nodes[str(edge.u)]
-                v = nodes[str(edge.v)]
-                plt.plot([u.x,v.x],[u.y,v.y],linestyle='-',\
-                    color=c.EDGE_COLOR,linewidth=edge.num_lanes*c.PLOT_EDGE_WIDTH)
-            else:
-                plt.plot([edge.u.x,edge.v.x],[edge.u.y,edge.v.y],linestyle='-',\
-                    color=c.EDGE_COLOR,linewidth=edge.num_lanes*c.PLOT_EDGE_WIDTH)
-                #plt.arrow(edge.u.x,edge.u.y,edge.v.x-edge.u.x,edge.v.y-edge.u.y,\
-                #    color=c.EDGE_COLOR,width=0.00001*edge.num_lanes,head_width=0.0001,length_includes_head=True)
-                if text:
-                    plt.text((edge.u.x+edge.v.x)/2,(edge.v.y+edge.u.y)/2,edge.id)
-    else:
-        nl = np.array([i.id for i in nodes])
-        for inode in nodes:
-            #draw node
-            plt.plot(inode.x,inode.y,linestyle='none',\
-                    marker=c.NODE_PLOT_SHAPE,markersize=c.NODE_PLOT_SIZE)
-        for iedge in edges:
-            #draw edges
-            if type(iedge.u) == int:
-                i = nodes[np.where(nl==str(iedge.u))[0][0]]
-                j = nodes[np.where(nl==str(iedge.v))[0][0]]
-                #print('plot',iedge.id,i.id,i.x,i.y,j.id,j.x,j.y)
-                plt.plot([i.x,j.x],[i.y,j.y],linestyle='-',\
-                    color=c.EDGE_COLOR,linewidth=edge.num_lanes*c.PLOT_EDGE_WIDTH)
-            else:
-                plt.plot([iedge.u.x,iedge.v.x],[iedge.u.y,iedge.v.y],\
-                    linestyle='-',color=c.EDGE_COLOR,linewidth=edge.num_lanes*c.PLOT_EDGE_WIDTH)
+    '''Plot nodes and edges
+    Args:
+        nodes: dict, dictionary of all nodes
+        edges: dict, dictionary of all edges
+        text: bool, if display edge id on map
+    '''
+    #- plot each node in dictionary using their coordinates
+    for key, node in nodes.items():
+        plt.plot(node.x,node.y,linestyle='none',\
+            marker=c.NODE_PLOT_SHAPE,markersize=c.NODE_PLOT_SIZE)
+    #- plot each edge in dictionary using their parents' coordinates
+    for key, edge in edges.items():
+        u = nodes[str(edge.u)]
+        v = nodes[str(edge.v)]
+        plt.plot([u.x,v.x],[u.y,v.y],linestyle='-',\
+            color=c.EDGE_COLOR,linewidth=edge.num_lanes*c.PLOT_EDGE_WIDTH)
                 
                     
 def drawPoint(pt1):
@@ -57,28 +38,29 @@ def drawPoint(pt1):
 
 
 def drawCars(cars,draw=True):
+    '''Plot nodes and edges
+    Args:
+        cars: list, list of all cars
+        draw: bool, draw is only set to be True the first time. \
+                While cars are updating, draw should always be False
+    Return:
+        list of line object, only used for updating graph
+    '''
     global car_data
     car_list = np.zeros((len(cars),2))
     it = 0
     for icar in cars:
         cur_p = icar.current_position
         if type(cur_p) is Node:
+            #-car is on node, using node coordinates
             car_list[it,0] = cur_p.x
             car_list[it,1] = cur_p.y
-            #print(cur_p.id,cur_p.x,cur_p.y)
         else:
-            #- car is on edge
-            #car.ts_on_current_position
+            #- car is on edge, calculates coordinates
             portion = icar.ts_on_current_position / icar.current_position.time_steps #cur_steps
             
-            if type(cur_p.u) is Node:
-                car_list[it,0] = cur_p.u.x + (cur_p.v.x - cur_p.u.x) * portion
-                car_list[it,1] = cur_p.u.y + (cur_p.v.y - cur_p.u.y) * portion
-            else:
-                print('plotting using id')
-                car_list[it,0] = nodes[str(cur_p.u)].x + (nodes[str(cur_p.v)].x-nodes[str(cur_p.u)].x) * portion
-                car_list[it,1] = nodes[str(cur_p.u)].y + (nodes[str(cur_p.v)].y-nodes[str(cur_p.u)].y) * portion
-
+            car_list[it,0] = cur_p.u.x + (cur_p.v.x - cur_p.u.x) * portion
+            car_list[it,1] = cur_p.u.y + (cur_p.v.y - cur_p.u.y) * portion
             
         it += 1
     if draw:
@@ -88,26 +70,26 @@ def drawCars(cars,draw=True):
         return car_list
 
 def update(cars):
+    '''Updates graph
+    '''
     global car_data
     car_list = drawCars(cars,draw=False)
 
     car_data.set_xdata(car_list[:,0])
     car_data.set_ydata(car_list[:,1])
-    #- assum plt.draw() update only cars
     plt.draw()
-    plt.pause(c.ANIMATION_SEG)
+    if len(cars<100):
+        plt.pause(c.ANIMATION_SEG)
     
 
 def init_graph(nodes,edges,cars,text=False):
+    '''Initialize graph with nodes, edgew and cars
+    '''
     drawMap(nodes,edges,text=text)
     drawCars(cars)
 
 if __name__ == '__main__':
-    '''Note
-    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    !For now, ts on each road is set to be 10!
-    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    '''
+    #- Visulizer Tester
     
     #- CONSTANTS are in constants.py Feel free to change
     
