@@ -15,7 +15,7 @@ Pre-Request:
 Running the project:
 	‘python driver.py’
 
-User-adjustable variables:\r
+User-adjustable variables:
 	User adjustable variables are located in driver.py
 	Size - list of car numbers desired to simulate. It can hold a list with single value if single car size size simulation is desired. The program will iterate through size and run simulations.
 	Weights_ratio - list of ratio desired to simulate. The number should be in [0.0:1.0]. Any number outside of the range is not promised to run properly.
