@@ -147,51 +147,52 @@ def multi_simulations(maps, visualization=False) :
         
 
 #single simulation plotting (int) total_time_steps (list) individual_travel_time
-#t_time, i_travel_time = run_simulation(Map())
+t_time, i_travel_time = run_simulation(Map(), visualization=VISUALIZATION)
 """
 Start of Analysis
 """
 """
 Checks for 
 """
-non_mod_maps = []
-mod_maps = []
 
-x = None
-#Varying num cars
-car_numbers_to_test = np.arange(100,1001,100) #100, 200, 300..1000
-#car_numbers_to_test = np.arange(100,201,50) #100,150, 200
-
-for i in car_numbers_to_test:
-    print(i)
-    non_mod_maps.append(Map(num_cars=i))
-    mod_maps.append(Map(num_cars=i, modified=True))
-
-#print(len(non_mod_maps))
-#print(len(car_numbers_to_test))
-total_time, avg_ind_time = multi_simulations(non_mod_maps)
-m_total_time, m_avg_ind_time = multi_simulations(mod_maps)
-
-print("now displaying figure 1")
-plt.title("Non-mod vs mod: total-time")
-plt.figure()
-plt.plot(car_numbers_to_test, total_time, "-o")
-plt.plot(car_numbers_to_test, m_total_time, "-o")
-plt.xlabel("number of cars")
-plt.ylabel("total-time")
-
-print("now displaying figure 2")
-plt.title("Non-mod vs mod: avg ind time")
-plt.figure()
-plt.plot(car_numbers_to_test, avg_ind_time, "-o")
-plt.plot(car_numbers_to_test, m_avg_ind_time, "-o")
-plt.xlabel("number of cars")
-plt.ylabel("avg in time")
-
-"""
-Checks For:
-"""
 def analysis():
+    non_mod_maps = []
+    mod_maps = []
+
+    #x = None
+    #Varying num cars
+    car_numbers_to_test = np.arange(100,1001,100) #100, 200, 300..1000
+    #car_numbers_to_test = np.arange(100,201,50) #100,150, 200
+
+    for i in car_numbers_to_test:
+        print(i)
+        non_mod_maps.append(Map(num_cars=i))
+        mod_maps.append(Map(num_cars=i, modified=True))
+
+    #print(len(non_mod_maps))
+    #print(len(car_numbers_to_test))
+    total_time, avg_ind_time = multi_simulations(non_mod_maps)
+    m_total_time, m_avg_ind_time = multi_simulations(mod_maps)
+
+    print("now displaying figure 1")
+    plt.title("Non-mod vs mod: total-time")
+    plt.figure()
+    plt.plot(car_numbers_to_test, total_time, "-o")
+    plt.plot(car_numbers_to_test, m_total_time, "-o")
+    plt.xlabel("number of cars")
+    plt.ylabel("total-time")
+
+    print("now displaying figure 2")
+    plt.title("Non-mod vs mod: avg ind time")
+    plt.figure()
+    plt.plot(car_numbers_to_test, avg_ind_time, "-o")
+    plt.plot(car_numbers_to_test, m_avg_ind_time, "-o")
+    plt.xlabel("number of cars")
+    plt.ylabel("avg in time")
+
+    """
+    Checks For:
+    """
     non_mod_maps = []
     mod_maps = []
     #Varying num cars
@@ -261,7 +262,7 @@ def analysis():
 
     plt.show()
 
-analysis()
+#analysis()
 
 
     
