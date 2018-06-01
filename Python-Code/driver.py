@@ -12,7 +12,7 @@ CENTER_LATITUDE = 47.608013
 CENTER_LONGITUDE = -122.335167
 DISTANCE_FROM_CENTER = 300
 NUM_CARS = 100
-VISUALIZATION = False
+VISUALIZATION = True
 RANDOM_START_DESTINATION = True
 NUM_SIMULATION = 10
 car_data = None
@@ -30,7 +30,7 @@ def drawCars(cars, draw=True):
             car_list[row, 0] = current_position.x
             car_list[row, 1] = current_position.y
         else: 
-            portion = car.ts_on_current_position / 10
+            portion = car.ts_on_current_position / 100
             car_list[row, 0] = (current_position.u.x  \
                             + (current_position.v.x \
                             - current_position.u.x)) * portion
@@ -89,7 +89,6 @@ def drawMap(nodes,edges):
                     linestyle='-',color=c.EDGE_COLOR,linewidth=edge.num_lanes*c.PLOT_EDGE_WIDTH)
 
 def _init_graph(nodes,edges,cars):
-    plt.ion()
     drawMap(nodes,edges)
     drawCars(cars)
 
@@ -104,7 +103,8 @@ def updateStatus(map):
     return individual_travel_time
 
 def run_simulation(map, visualization=False): 
-    _init_graph(map.node_map, map.edge_map, map.car_map)
+    if visualization:
+        _init_graph(map.node_map, map.edge_map, map.car_map)
     individual_travel_time = []
     total_time = 0
     while len(map.car_map) > 0:
@@ -116,7 +116,8 @@ def run_simulation(map, visualization=False):
             else:
                 car.visited = False
         total_time += 1
-        update(map.car_map)
+        if visualization:
+            update(map.car_map)
     plt.ion()
     plt.show()
     print("time", total_time)
@@ -144,7 +145,7 @@ def multi_simulations(number_of_simulation):
 map = Map(CENTER_LATITUDE, CENTER_LONGITUDE,\
          DISTANCE_FROM_CENTER, NUM_CARS, \
          random_init=RANDOM_START_DESTINATION, modified=False)      
-total_time, individual_travel_time = run_simulation(map)
+total_time, individual_travel_time = run_simulation(map, visualization=VISUALIZATION)
 individual_travel_time = np.array(individual_travel_time)
 np.random.shuffle(individual_travel_time)
 x = np.arange(len(individual_travel_time))

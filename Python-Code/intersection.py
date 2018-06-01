@@ -48,7 +48,7 @@ class Intersection(object):
 			if done: 
 				car.destination.remove(car)
 
-	def shortest_path(self, destination): 
+	def shortest_path(self, destination, modified=False): 
 		print("start point = ", self.id)
 		print("passed in destination = ", destination.id)
 		self.value = 0 
@@ -57,7 +57,7 @@ class Intersection(object):
 		self.parent = None
 		while current != destination:
 			current.visited = True
-			current.relax_neighbors(priority_Q)
+			current.relax_neighbors(priority_Q, modified)
 			if priority_Q.empty(): 
 				return False, self.make_trail(current)
 			current = priority_Q.get_nowait()
@@ -77,10 +77,14 @@ class Intersection(object):
 
 
 
-	def relax_neighbors(self, priority_Q):
+	def relax_neighbors(self, priority_Q, modified=False):
 		for edge in self.out_edges: 
 			neighbor_node = edge.v
-			temp_value = self.value + edge.time_steps + neighbor_node.time_steps
+			if modified:
+				temp_value = self.value + (edge.q_size / edge.capacity) \
+						+ (neighbor_node.q_size / neighbor_node.capacity)
+			else:
+				temp_value = self.value + edge.time_steps + neighbor_node.time_steps
 			if not neighbor_node.visited and temp_value < neighbor_node.value:
 				neighbor_node.value = temp_value
 				neighbor_node.parent = self

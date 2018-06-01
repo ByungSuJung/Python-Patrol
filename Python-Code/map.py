@@ -22,7 +22,7 @@ class Map:
 		self.random_init = random_init
 		center_pt = (center_lat, center_long)
 		print("before getting data")
-		G = ox.graph_from_point(center_pt, distance=500, network_type='drive') # distance = dist
+		G = ox.graph_from_point(center_pt, distance=dist, network_type='drive') # distance = dist
 		print("got data")
 		self.node_map = self.set_intersections(G) #dictionary of nodes
 		print("set node")
@@ -104,13 +104,13 @@ class Map:
 		#destination = node_dict[53213413]
 		#path = nx.dijkstra_path(G,start,destination)
 		print("passing dest", destination.id)
-		success, path = start.shortest_path(destination)
+		success, path = start.shortest_path(destination, modified=self.modified)
 		print(success)
 		print(path)
-		if not success:  
+		while not success:  
 			print("insde first loop")
 			start, destination = self.init_trip(node_dict)
-			success, path = start.shortest_path(destination)
+			success, path = start.shortest_path(destination, modified=self.modified)
 
 		car_list = []
 		for i in range(num_cars):
@@ -135,14 +135,14 @@ class Map:
 				print("assigning each car start and destnination")
 				start, destination = self.init_trip(node_dict)
 				start.reset_nodes()
-				success, path = start.shortest_path(destination)
+				success, path = start.shortest_path(destination, modified=self.modified)
 
 				while not success: 
 					print("failed so go again")
 					print(path)
 					start, destination = self.init_trip(node_dict)
 					start.reset_nodes()
-					success, path = start.shortest_path(destination)
+					success, path = start.shortest_path(destination, modified=self.modified)
 
 				print("success")
 				print(path)
