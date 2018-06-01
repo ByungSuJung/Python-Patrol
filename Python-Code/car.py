@@ -40,10 +40,12 @@ class Car(object):
                     self.next_to_visit.add(self)
                     self.current_position = self.next_to_visit
                     print(type(self.current_position), " ", self.current_position.id)
-
+                    print("HELPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP")
                     if self.current_position in self.path: 
+                        print("HELPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP")
                         temp = self.path.index(self.current_position) + 1 # index
                         self.next_to_visit = self.path[temp] # next in given list of path
+                        print("finished")
                     else: 
                         print("error in intersection to edge ~~~~~~~~~~~~~~~~~~~~~~~~~~~``")
                         print(self.current_position.id)
@@ -79,6 +81,7 @@ class Car(object):
                         print("reached destination")
                         print("index = ", self.path.index(self.current_position))
                         print("finished car", self.map.car_map.index(self))
+                        self.current_position.remove(self)
                         self.done = True
                         return True
                 else: 
@@ -94,6 +97,9 @@ class Car(object):
             temp_value = self.next_to_visit.q_size / self.next_to_visit.capacity
             if temp_value > self.TRAFFIC_TOLERANCE:
                 self.find_shortest_path()
+            else: 
+                pass
+            
         return self.try_move_from_edge()
     
     def try_move_from_edge(self):

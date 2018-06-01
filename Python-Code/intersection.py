@@ -48,6 +48,7 @@ class Intersection(object):
 			if done: 
 				car.destination.remove(car)
 
+
 	def shortest_path(self, destination, modified=False): 
 		print("start point = ", self.id)
 		print("passed in destination = ", destination.id)
@@ -61,7 +62,6 @@ class Intersection(object):
 			if priority_Q.empty(): 
 				return False, self.make_trail(current)
 			current = priority_Q.get_nowait()
-		
 		return True, self.make_trail(current)
 
 	def make_trail(self, current):

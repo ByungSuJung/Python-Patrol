@@ -85,9 +85,6 @@ class Map:
 			edge_dict[id] = edge_to_insert
 			id+=1
 		#removed bad edge
-		edge_dict.pop(56)
-		edge_dict.pop(50)
-		edge_dict.pop(53)
 		return edge_dict
 
 	def add_edges(self, node_dict, edge_dict):
