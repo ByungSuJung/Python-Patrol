@@ -78,7 +78,7 @@ def update(cars):
     car_data.set_xdata(car_list[:,0])
     car_data.set_ydata(car_list[:,1])
     plt.draw()
-    if len(cars<100):
+    if len(cars)<100:
         plt.pause(c.ANIMATION_SEG)
     
 
