@@ -2,16 +2,21 @@
 This is a class project that our team (Python Patrol) has created at University of Washington Bothell, the specific coure this is for is fundamentals of computer simulation theory and application.
 
 Project description:
-
 	This project simulates traffic in any location on earth. Cars are set to have random starting points and destinations. The goal of this project is to study the effect on traffic by calculating weight on edges using different capacity/time step ratio. The program also provide visualization option (may be laggy).
 
 
 Pre-Request:
 
 1.	Install osmnx package
-	‘conda install -c conda-forge osmnx’
-	OR ‘pip install osmnx’
+
+	conda install -c conda-forge osmnx
+	
+	OR 
+	
+	pip install osmnx
+	
 2.	Git clone https://github.com/T-Wick/Python-Patrol
+
 3. 	(Parallel branch only) pip install joblib
 
 Running the project:
