@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import constants as c
 import numpy as np
 from intersection import Intersection
+from car import Car
 #import visualize
 
 # CONSTANTS 
@@ -12,15 +13,91 @@ CENTER_LATITUDE = 47.608013
 CENTER_LONGITUDE = -122.335167
 DISTANCE_FROM_CENTER = 500
 NUM_CARS = 1000
-VISUALIZATION = False
-RANDOM_START_DESTINATION = True
+VISUALIZATION = True
+RANDOM_START_DESTINATION = False
 NUM_SIMULATION = 10
 TRAFFIC_TOLERANCE = 0.75  
 car_data = None
 
 fig, ax = plt.subplots()
+"""
+def drawMap(nodes,edges,text=False):
+    '''Plot nodes and edges
+    Args:
+        nodes: dict, dictionary of all nodes
+        edges: dict, dictionary of all edges
+        text: bool, if display edge id on map
+    '''
+    #- plot each node in dictionary using their coordinates
+    for key, node in nodes.items():
+        ax.plot(node.x,node.y,linestyle='none',\
+            marker=c.NODE_PLOT_SHAPE,markersize=c.NODE_PLOT_SIZE)
+    #- plot each edge in dictionary using their parents' coordinates
+    for key, edge in edges.items():
+        u = nodes[str(edge.u)]
+        v = nodes[str(edge.v)]
+        ax.plot([u.x,v.x],[u.y,v.y],linestyle='-',\
+            color=c.EDGE_COLOR,linewidth=edge.num_lanes*c.PLOT_EDGE_WIDTH)
+                
+                    
+def drawPoint(pt1):
+    ax.plot(pt1[0],pt1[1],linestyle='none',marker='o',markersize=12,color='red')
+"""
 
-from car import Car
+def drawCars(cars,draw=True):
+    '''Plot nodes and edges
+    Args:
+        cars: list, list of all cars
+        draw: bool, draw is only set to be True the first time. \
+                While cars are updating, draw should always be False
+    Return:
+        list of line object, only used for updating graph
+    '''
+    global car_data
+    car_list = np.zeros((len(cars),2))
+    it = 0
+    for icar in cars:
+        cur_p = icar.current_position
+        if type(cur_p) is Intersection:
+            #-car is on node, using node coordinates
+            car_list[it,0] = cur_p.x
+            car_list[it,1] = cur_p.y
+        else:
+            #- car is on edge, calculates coordinates
+            portion = icar.ts_on_current_position / icar.current_position.time_steps #cur_steps
+            
+            car_list[it,0] = cur_p.u.x + (cur_p.v.x - cur_p.u.x) * portion
+            car_list[it,1] = cur_p.u.y + (cur_p.v.y - cur_p.u.y) * portion
+            
+        it += 1
+    if draw:
+        car_data, = ax.plot(car_list[:,0],car_list[:,1],linestyle='none',\
+            marker=c.CAR_PLOT_SHAPE,markersize=c.CAR_PLOT_SIZE,color='red')
+    else:
+        return car_list
+
+def update(cars):
+    '''Updates graph
+    '''
+    global car_data
+    car_list = drawCars(cars,draw=False)
+
+    car_data.set_xdata(car_list[:,0])
+    car_data.set_ydata(car_list[:,1])
+    plt.draw()
+    if len(cars) < 100:
+        plt.pause(c.ANIMATION_SEG)
+ 
+
+def _init_graph(nodes,edges,cars,text=False):
+    '''Initialize graph with nodes, edgew and cars
+    '''
+    drawMap(nodes,edges)
+    drawCars(cars)
+
+
+
+"""
 def drawCars(cars, draw=True):
     global car_data
     car_list = np.zeros((len(cars), 2))
@@ -31,7 +108,7 @@ def drawCars(cars, draw=True):
             car_list[row, 0] = current_position.x
             car_list[row, 1] = current_position.y
         else: 
-            portion = car.ts_on_current_position / 10
+            portion = car.ts_on_current_position / car.current_position.time_steps
             car_list[row, 0] = (current_position.u.x  \
                             + (current_position.v.x \
                             - current_position.u.x)) * portion
@@ -56,7 +133,7 @@ def update(cars):
     plt.pause(c.ANIMATION_SEG)
 
 # for image initiation 
-    
+"""
 def drawMap(nodes,edges):
     if type(nodes) is dict:
         for key, node in nodes.items():
@@ -88,11 +165,12 @@ def drawMap(nodes,edges):
             else:
                 ax.plot([iedge.u.x,iedge.v.x],[iedge.u.y,iedge.v.y],\
                     linestyle='-',color=c.EDGE_COLOR,linewidth=edge.num_lanes*c.PLOT_EDGE_WIDTH)
-
+"""
 def _init_graph(nodes,edges,cars):
     drawMap(nodes,edges)
     drawCars(cars)
 
+"""
 def updateStatus(map):
     individual_travel_time = []
     for car in map.car_map:

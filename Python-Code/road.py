@@ -30,6 +30,8 @@ class Road(object):
     def calculate_time_steps(self): 
         self.time_steps = \
         (int) (((self.length / self.max_speed)) / self.ONE_TIME_STEP) 
+        if self.time_steps < 1: 
+            self.time_steps = 1
     
     def add(self, car):
         self.queue.append(car)
