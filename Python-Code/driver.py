@@ -9,6 +9,7 @@ import navigate as nv
 import visualizer as vis 
 from joblib import Parallel, delayed
 import time, threading
+from multiprocessing import Queue
 
 
 nodes = None
@@ -16,32 +17,35 @@ edges = None
 node_key = None
 edge_key = None
 CORES=8 #- cores=-1 to use all cores, -2 to use all cores except first core
+WEIGHT=0.0
 visual=False
+dk_arg_q = Queue()
+q_size = 0
 
-def initialize_car(st,end,weight=1.0):
+def initialize_car(st,end):
     #- get working starting point and destinations
-    paths = nv.dk(st,end,weight_on_length=weight,parallel=True)
+    paths = nv.dk(st,end,weight_on_length=WEIGHT,parallel=True)
     while type(paths) is bool or len(paths) <=1 or nodes[str(st)].isFull():
         r_v = np.random.randint(len(nodes),size=2)
         while node_key[r_v[0]] == node_key[r_v[1]]:
             r_v = np.random.randint(len(nodes),size=2)
         st = nodes[node_key[r_v[0]]]
         end = nodes[node_key[r_v[1]]]
-        paths = nv.dk(str(st),str(end),weight_on_length=weight,parallel=True)
+        paths = nv.dk(str(st),str(end),weight_on_length=WEIGHT,parallel=True)
     return str(st),str(end),paths
 
-def dk_parallel(nxt_move,current_position,dest,weight=1.0):
-    if nxt_move in edges:
-        tmp_path = nv.dk(current_position,dest,weight_on_length=weight,parallel=True)
-        if type(tmp_path) != bool:
-            nxt_move=tmp_path[1]
-            if not edges[nxt_move].add():return None
+def dk_parallel():
+    current_position,dest,i = dk_arg_q.get()
+    tmp_path = nv.dk(current_position,dest,weight_on_length=WEIGHT,parallel=True)
+    if type(tmp_path) != bool:
+        nxt_move=tmp_path[1]
+        if not edges[nxt_move].add():return None,i
+        return tmp_path,i #- tuple
 
-            return tmp_path #- tuple
-
-def start_simulation(cars_data=None,conti=False,car_size=c.NUMBER_CARS,error_count=0,filename=None,weight=1.0,std_out=True):
+def start_simulation(cars_data=None,conti=False,car_size=c.NUMBER_CARS,error_count=0,filename=None,std_out=True):
     global nodes, edges
     print('-------------------start new simulation-----------------------')
+    print('Weight ratio is',WEIGHT)
     f = None
     global_time_ts = 0
 
@@ -67,18 +71,8 @@ def start_simulation(cars_data=None,conti=False,car_size=c.NUMBER_CARS,error_cou
 
     if filename is not None:f=open(filename,'w')
 
-    def operate_data(path,indice):
-        if path is not None:
-            cur_pos=str(cars[indice].current_position)
-            cars[indice].set_path(list(path)[1:])
-            nxt_move = cars[indice].paths[0]
-            if edges[nxt_move].add():
-                nodes[cur_pos].remove()
-                cars[indice].current_position = edges[nxt_move]
-                cars[indice].ts_on_current_position=0
-                cars[indice].paths.pop(0)
-
     while len(cars) > error_count:
+        q_size=0
         global_time_ts += 1
         car_indeces_re_rout = []
         rm_list = []
@@ -112,6 +106,9 @@ def start_simulation(cars_data=None,conti=False,car_size=c.NUMBER_CARS,error_cou
                 if nxt_move in edges:
                     #- run algrithm in parallel
                     car_indeces_re_rout.append(i)
+                    dk_arg_q.put((str(cars[i].current_position),str(cars[i].dest),i))
+                    q_size+=1
+
                 elif nxt_move in nodes:
                     if nodes[nxt_move].add():
                         cars[i].current_position = nodes[nxt_move]
@@ -123,27 +120,26 @@ def start_simulation(cars_data=None,conti=False,car_size=c.NUMBER_CARS,error_cou
 
         pl_job = len(car_indeces_re_rout)
         if pl_job > 0 :
-            results = Parallel(n_jobs=CORES)(delayed(dk_parallel)\
-                (str(cars[i].paths[0]),str(cars[i].current_position),str(cars[i].dest),weight) for i in car_indeces_re_rout)
+            results = Parallel(n_jobs=CORES)(delayed(dk_parallel)() for i in range(q_size))
             #- do threading to operate data
-            jobs = []
+            #jobs = []
             for i in range(len(results)):
-                path = results[i]
-                indice = car_indeces_re_rout[i]
-                tmp_thread = threading.Thread(target=operate_data(path,indice))
-                jobs.append(tmp_thread)
-                tmp_thread.start()
-                #if path is not None:
-                #    cur_pos=str(cars[indice].current_position)
-                #    cars[indice].set_path(list(path)[1:])
-                #    nxt_move = cars[indice].paths[0]
-                #    if edges[nxt_move].add():
-                #        nodes[cur_pos].remove()
-                #        cars[indice].current_position = edges[nxt_move]
-                #        cars[indice].ts_on_current_position=0
-                #       cars[indice].paths.pop(0)
-            for j in jobs:
-                j.join()
+                path,indice = results[i]
+                #indice = car_indeces_re_rout[i]
+                #tmp_thread = threading.Thread(target=operate_data(path,indice))
+                #jobs.append(tmp_thread)
+                #tmp_thread.start()
+                if path is not None:
+                    cur_pos=str(cars[indice].current_position)
+                    cars[indice].set_path(list(path)[1:])
+                    nxt_move = cars[indice].paths[0]
+                    if edges[nxt_move].add():
+                        nodes[cur_pos].remove()
+                        cars[indice].current_position = edges[nxt_move]
+                        cars[indice].ts_on_current_position=0
+                        cars[indice].paths.pop(0)
+            #for j in jobs:
+            #    j.join()
 
         car_index_list = [c.id for c in cars]
         rm_list.sort(reverse=True)
@@ -207,16 +203,18 @@ if __name__ == '__main__':
         vis.init_graph(nodes,edges,cars,text=False)
     
     #def start_simulation(cars_data=None,conti=False,car_size=c.NUMBER_CARS,error_count=0,visual=False,filename=None)
-    size=[500,2000,4000,8000,16000,40000]
+    #size=[510,2050,4050,8100,16100,42000]
+    #size=[510,2050,4050,8100,16100,42000]
+    size=[8100]
     for s in size:
-        w = 0.0
+        WEIGHT = 0.0
         results = []
-        tot_ts1, cars_data = start_simulation(error_count=10,std_out=False,weight=w,car_size=size)
+        tot_ts1, cars_data = start_simulation(error_count=10,std_out=False,car_size=s)
         results.append(tot_ts1)
-        while w <= 1.0:
-            t,d = start_simulation(error_count=10,cars_data=cars_data,weight=w,std_out=False,car_size=size)
+        while WEIGHT <= 1.0:
+            WEIGHT += 0.1
+            t,d = start_simulation(error_count=10,cars_data=cars_data,std_out=False,car_size=s)
             results.append(t)
-            w += 0.1
         printout = str(len(cars_data))
         for r in results:
             printout += ' '
@@ -224,5 +222,7 @@ if __name__ == '__main__':
         with open ('log.txt','a') as f:
             f.write(printout)
         print(printout)
-
+    if visual:
+        plt.ion()
+        plt.show()
     quit()
