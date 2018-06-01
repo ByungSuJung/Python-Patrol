@@ -32,12 +32,12 @@ class Car(object):
                     print("car id", self.map.car_map.index(self))
                     print(type(self.current_position), " ", self.current_position.id)
                     self.current_position.remove(self)
-                    print(type(self.current_position), " ", self.current_position.id)
                     if not self.next_to_visit in self.path: 
                         temp = self.path.index(self.current_position) + 1 # index
                         self.next_to_visit = self.path[temp] # next in given list of path
                     self.next_to_visit.add(self)
                     self.current_position = self.next_to_visit
+                    print(type(self.current_position), " ", self.current_position.id)
 
                     if self.current_position in self.path: 
                         temp = self.path.index(self.current_position) + 1 # index
@@ -77,7 +77,6 @@ class Car(object):
                         print("reached destination")
                         print("index = ", self.path.index(self.current_position))
                         print("finished car", self.map.car_map.index(self))
-                        self.destination.remove(self)
                         self.done = True
                         return True
                 else: 
