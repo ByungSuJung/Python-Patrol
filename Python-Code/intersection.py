@@ -47,7 +47,7 @@ class Intersection(object):
 		#self.neighbor_nodes.append(neighbor_node)#Add the node to your neighbor list
 
 	def add(self):
-		if(len(self.queue) + 1 <= self.cap):
+		if(self.q_size + 1 <= self.cap):
 			self.queue.append('car')					#Place the car onto the queue
 			self.q_size += 1						#Properly track queue size
 			#car.ts_on_current_position = 1						#Reset the time on object for the car
