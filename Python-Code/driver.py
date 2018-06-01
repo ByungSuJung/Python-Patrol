@@ -11,14 +11,15 @@ from intersection import Intersection
 CENTER_LATITUDE = 47.608013
 CENTER_LONGITUDE = -122.335167
 DISTANCE_FROM_CENTER = 300
-NUM_CARS = 100
+NUM_CARS = 5
 VISUALIZATION = False
-RANDOM_START_DESTINATION = False
+RANDOM_START_DESTINATION = True
 NUM_SIMULATION = 10
 car_data = None
 
 fig, ax = plt.subplots()
 
+from car import Car
 def drawCars(cars, draw=True):
     global car_data
     car_list = np.zeros((len(cars), 2))

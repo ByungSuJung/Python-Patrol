@@ -35,10 +35,13 @@ class Car(object):
                     self.current_position.remove(self)
                     self.current_position = self.next_to_visit
                     print(type(self.current_position), " ", self.current_position.id)
-                    temp = self.path.index(self.current_position) + 1 # index
-                    print("road that is not in the list = ", self.current_position.id)
-                    print("index of temp = ", temp)
-                    self.next_to_visit = self.path[temp] # next in given list of path
+                    try: 
+                        temp = self.path.index(self.current_position) + 1 # index
+                        print("road that is not in the list = ", self.current_position.id)
+                        print("index of temp = ", temp)
+                        self.next_to_visit = self.path[temp] # next in given list of path
+                    except ValueError:
+                        print(self.current_position.id)
                 else: 
                     pass
             else: # if on edge(road) 

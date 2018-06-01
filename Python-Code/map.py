@@ -103,7 +103,7 @@ class Map:
 		success, path = start.shortest_path(destination)
 		print(success)
 		print(path)
-		while not success:  
+		if not success:  
 			print("insde first loop")
 			start, destination = self.init_trip(node_dict)
 			success, path = start.shortest_path(destination)
@@ -128,11 +128,20 @@ class Map:
 			car_list.append(Car(start, destination, map=self, path=path, modified=self.modified))
 			
 			if self.random_init: #if modified dijkstra
+				print("assigning each car start and destnination")
 				start, destination = self.init_trip(node_dict)
+				start.reset_nodes()
 				success, path = start.shortest_path(destination)
+
 				while not success: 
+					print("failed so go again")
+					print(path)
 					start, destination = self.init_trip(node_dict)
+					start.reset_nodes()
 					success, path = start.shortest_path(destination)
+
+				print("success")
+				print(path)
 		return car_list
 
 	def init_trip(self, node_dict): 
