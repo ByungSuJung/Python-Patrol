@@ -11,7 +11,7 @@ class Map:
 	"""
 
 	"""
-	def __init__(self, center_lat=c.SEA_LATITUDE, center_long=c.SEA_LONGITUDE, \
+	def __init__(self, center_lat=47.608013, center_long=-122.335167, \
 	dist=700, num_cars=1000, random_init=True, modified=False, \
 	traffic_tolerance=0.75):
 		"""
@@ -101,14 +101,15 @@ class Map:
 		#start = node_dict[53213414]
 		#destination = node_dict[53144260]
 		#path = nx.dijkstra_path(G,start,destination)
-		#print("passing dest", destination.id)
-		success, path = start.shortest_path(destination, modified=self.modified)
-		#print(success)
-		#print(path)
-		if not success:  
-			#print("insde first loop")
+		print("passing dest", destination.id)
+		success, path = start.shortest_path(destination, modified=False)
+		print(success)
+		print(path)
+		while not success:  
+			print("insde first loop")
+			start.reset_nodes()
 			start, destination = self.init_trip(node_dict)
-			success, path = start.shortest_path(destination, modified=self.modified)
+			success, path = start.shortest_path(destination, modified=False)
 
 		car_list = []
 		for i in range(num_cars):
@@ -119,14 +120,14 @@ class Map:
 				#print("assigning each car start and destnination")
 				start, destination = self.init_trip(node_dict)
 				start.reset_nodes()
-				success, path = start.shortest_path(destination, modified=self.modified)
+				success, path = start.shortest_path(destination, modified=False)
 
 				while not success: 
 					#print("failed so go again")
 					#print(path)
 					start, destination = self.init_trip(node_dict)
 					start.reset_nodes()
-					success, path = start.shortest_path(destination, modified=self.modified)
+					success, path = start.shortest_path(destination, modified=False)
 
 				print("success")
 				print(path)

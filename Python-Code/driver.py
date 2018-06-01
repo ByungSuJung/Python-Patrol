@@ -6,13 +6,21 @@ import numpy as np
 from intersection import Intersection
 from car import Car
 
-# CONSTANTS 
-VISUALIZATION = True
-#RAND_STRT_DEST = False
-#NUM_SIMULATION = 10
-#TRAF_TOL = 0.75  
-car_data = None
+#Varying Map Parameters:
+CENTER_LATITUDE = 47.608013
+CENTER_LONGITUDE = -122.335167
+DISTANCE_FROM_CENTER = 500
+NUM_CARS = 1000
+RANDOM_START_DESTINATION = True
+TRAFFIC_TOLERANCE = 0.75 
+MODIFIED = False
 
+
+#Varying Driver parameters
+VISUALIZATION = False
+SINGLE = True
+
+car_data = None
 fig, ax = plt.subplots()
 
 def drawCars(cars,draw=True):
@@ -147,14 +155,15 @@ def multi_simulations(maps, visualization=False) :
         
 
 #single simulation plotting (int) total_time_steps (list) individual_travel_time
-t_time, i_travel_time = run_simulation(Map(), visualization=VISUALIZATION)
-"""
-Start of Analysis
-"""
-"""
-Checks for 
-"""
+if SINGLE:
+    single_map=Map(center_lat=CENTER_LATITUDE,center_long=CENTER_LONGITUDE,\
+    dist=DISTANCE_FROM_CENTER,num_cars=NUM_CARS,random_init=RANDOM_START_DESTINATION,\
+    modified=MODIFIED,traffic_tolerance=TRAFFIC_TOLERANCE)
+    t_time, i_travel_time = run_simulation(single_map ,visualization=VISUALIZATION)
 
+"""
+-------------------Start of Analysis-------------------------------------
+"""
 def analysis():
     non_mod_maps = []
     mod_maps = []
@@ -174,24 +183,22 @@ def analysis():
     total_time, avg_ind_time = multi_simulations(non_mod_maps)
     m_total_time, m_avg_ind_time = multi_simulations(mod_maps)
 
-    print("now displaying figure 1")
+    print("now displaying graph 1")
     plt.title("Non-mod vs mod: total-time")
-    plt.figure()
+    plt.figure(1)
     plt.plot(car_numbers_to_test, total_time, "-o")
     plt.plot(car_numbers_to_test, m_total_time, "-o")
     plt.xlabel("number of cars")
     plt.ylabel("total-time")
 
-    print("now displaying figure 2")
+    print("now displaying graph 2")
     plt.title("Non-mod vs mod: avg ind time")
-    plt.figure()
+    plt.figure(2)
     plt.plot(car_numbers_to_test, avg_ind_time, "-o")
     plt.plot(car_numbers_to_test, m_avg_ind_time, "-o")
     plt.xlabel("number of cars")
     plt.ylabel("avg in time")
-
-    """
-    Checks For:
+    
     """
     non_mod_maps = []
     mod_maps = []
@@ -211,7 +218,7 @@ def analysis():
 
     print("now displaying figure 3")
     plt.title("Non-mod vs mod: total-time")
-    plt.figure()
+    plt.figure(3)
     plt.plot(radii_to_test, total_time, "-o")
     plt.plot(radii_to_test , m_total_time, "-o")
     plt.xlabel("map radius")
@@ -219,15 +226,12 @@ def analysis():
 
     print("now displaying figure 4")
     plt.title("Non-mod vs mod: avg ind-time")
-    plt.figure()
+    plt.figure(4)
     plt.plot(radii_to_test, avg_ind_time, "-o")
     plt.plot(radii_to_test , m_avg_ind_time, "-o")
     plt.xlabel("map radius")
     plt.ylabel("average ind time")
 
-    """
-    Checks For:
-    """
     non_mod_maps = []
     mod_maps = []
     #Varying num cars
@@ -246,7 +250,7 @@ def analysis():
 
     print("now displaying figure 5")
     plt.title("Non-mod vs mod: total-time")
-    plt.figure()
+    plt.figure(5)
     plt.plot(caps_to_test, total_time, "-o")
     plt.plot(caps_to_test , m_total_time, "-o")
     plt.xlabel("traffic tolerance")
@@ -254,15 +258,15 @@ def analysis():
 
     print("now displaying figure 6")
     plt.title("Non-mod vs mod: avg ind time")
-    plt.figure()
+    plt.figure(6)
     plt.plot(caps_to_test, avg_ind_time, "-o")
     plt.plot(caps_to_test , m_avg_ind_time, "-o")
     plt.xlabel("traffic tolerance")
     plt.ylabel("avg ind-time")
-
+    """
     plt.show()
 
-#analysis()
+analysis()
 
 
     
