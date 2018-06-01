@@ -42,13 +42,13 @@ class Road(object):
             self.queue.append('car')
             self.q_size += 1
             #car.ts_on_current_position = 1
-            self._re_time_steps_()
+            #self._re_time_steps_()
             return True
         return False
         
 
     def remove(self):
-        self._re_time_steps_()
+        #self._re_time_steps_()
         #self.queue.get_nowait()
         self.queue.pop(0)
         self.q_size -= 1
