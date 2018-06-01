@@ -110,5 +110,7 @@ class Car(object):
         if self.current_position != self.path[0]:
             self.current_position.reset_nodes()
             success, self.path = self.current_position.shortest_path(self.destination, modified=self.modified)
+            if not success: 
+                success, self.path = self.current_position.shortest_path(self.destination, modified=False)
             #while not success: 
                 #success, self.path = self.current_position.shortest_path(self.destination)

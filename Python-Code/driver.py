@@ -13,8 +13,8 @@ CENTER_LATITUDE = 47.608013
 CENTER_LONGITUDE = -122.335167
 DISTANCE_FROM_CENTER = 500
 NUM_CARS = 1000
-VISUALIZATION = True
-RANDOM_START_DESTINATION = False
+VISUALIZATION = False
+RANDOM_START_DESTINATION = True
 NUM_SIMULATION = 10
 TRAFFIC_TOLERANCE = 0.75  
 car_data = None
@@ -211,7 +211,7 @@ def multi_simulations(number_of_simulation):
     for i in np.arange(number_of_simulation):
         map = Map(CENTER_LATITUDE, CENTER_LONGITUDE,\
             DISTANCE_FROM_CENTER, NUM_CARS, \
-            random_init=RANDOM_START_DESTINATION, modified=False)
+            random_init=RANDOM_START_DESTINATION, modified=True)
         m_list.append(map)
     for map in m_list:
         total_time, individual_travel_time = \
@@ -223,6 +223,8 @@ def multi_simulations(number_of_simulation):
         
 
 #single simulation plotting (int) total_time_steps (list) individual_travel_time
+
+"""
 map = Map(CENTER_LATITUDE, CENTER_LONGITUDE,\
          DISTANCE_FROM_CENTER, NUM_CARS, \
          random_init=RANDOM_START_DESTINATION, modified=True, traffic_tolerance=TRAFFIC_TOLERANCE)      
@@ -231,7 +233,6 @@ individual_travel_time = np.array(individual_travel_time)
 np.random.shuffle(individual_travel_time)
 x = np.arange(len(individual_travel_time))
 
-"""
 map = Map(CENTER_LATITUDE, CENTER_LONGITUDE,\
          DISTANCE_FROM_CENTER, NUM_CARS, \
          random_init=RANDOM_START_DESTINATION, modified=False)      
@@ -244,9 +245,9 @@ plt.show()
 """
 
 
-"""
-total_time_list, avg_individual_time = multi_simulations(NUM_SIMULATION)
 
+total_time_list, avg_individual_time = multi_simulations(NUM_SIMULATION)
+"""
 x = np.arange(len(total_time_list))
 plt.figure(0)
 plt.plot(x, total_time_list)

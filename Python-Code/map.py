@@ -102,13 +102,14 @@ class Map:
 		#destination = node_dict[53144260]
 		#path = nx.dijkstra_path(G,start,destination)
 		print("passing dest", destination.id)
-		success, path = start.shortest_path(destination, modified=self.modified)
+		success, path = start.shortest_path(destination, modified=False)
 		print(success)
 		print(path)
-		if not success:  
+		while not success:  
 			print("insde first loop")
+			start.reset_nodes()
 			start, destination = self.init_trip(node_dict)
-			success, path = start.shortest_path(destination, modified=self.modified)
+			success, path = start.shortest_path(destination, modified=False)
 
 		car_list = []
 		for i in range(num_cars):
@@ -133,14 +134,14 @@ class Map:
 				print("assigning each car start and destnination")
 				start, destination = self.init_trip(node_dict)
 				start.reset_nodes()
-				success, path = start.shortest_path(destination, modified=self.modified)
+				success, path = start.shortest_path(destination, modified=False)
 
 				while not success: 
 					print("failed so go again")
 					print(path)
 					start, destination = self.init_trip(node_dict)
 					start.reset_nodes()
-					success, path = start.shortest_path(destination, modified=self.modified)
+					success, path = start.shortest_path(destination, modified=False)
 
 				print("success")
 				print(path)
