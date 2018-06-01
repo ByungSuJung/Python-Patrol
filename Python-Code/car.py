@@ -35,13 +35,14 @@ class Car(object):
                     self.current_position.remove(self)
                     self.current_position = self.next_to_visit
                     print(type(self.current_position), " ", self.current_position.id)
-                    try: 
-                        temp = self.path.index(self.current_position) + 1 # index
-                        print("road that is not in the list = ", self.current_position.id)
-                        print("index of temp = ", temp)
-                        self.next_to_visit = self.path[temp] # next in given list of path
-                    except ValueError:
+                    
+                    if self.current_position in self.path: 
                         print(self.current_position.id)
+                        temp = self.path.index(self.current_position) + 1 # index
+                        self.next_to_visit = self.path[temp] # next in given list of path
+                    else: 
+                        print(self.current_position.id)
+                    
                 else: 
                     pass
             else: # if on edge(road) 
@@ -54,11 +55,18 @@ class Car(object):
                     print("current_position:", self.current_position.id)
                     print("self.destination: ", self.destination.id)
                     if self.current_position != self.destination:
-                        temp = self.path.index(self.current_position) + 1
-                        print("temp index = ", temp)
-                        print("length of list = ", len(self.path))
+                        if self.current_position in self.path:
+                            temp = self.path.index(self.current_position) + 1
+                            print("temp index = ", temp)
+                            print("length of list = ", len(self.path))
+                            self.next_to_visit = self.path[temp]
+                        else:
+                            print(self.current_position.id)
+                            temp = self.path.index(self.current_position) + 1
+                            print("temp index = ", temp)
+                            print("length of list = ", len(self.path))
+                            self.next_to_visit = self.path[temp]
                     # in the intersection 
-                        self.next_to_visit = self.path[temp]
                     else: 
                         print("reached destination")
                         print("index = ", self.path.index(self.current_position))
