@@ -7,23 +7,23 @@ Project description:
 	
 Pre-Request:
 
-Install osmnx package
+	Install osmnx package
 
-	conda install -c conda-forge osmnx
+		conda install -c conda-forge osmnx
 	
-	OR 
+		pip install osmnx
 	
-	pip install osmnx
-	
-Download Project
+	Download Project
 
-Git clone https://github.com/T-Wick/Python-Patrol
+		Git clone https://github.com/T-Wick/Python-Patrol.git
 
-(Parallel branch only) pip install joblib
+	(Parallel branch only) 
+	
+		pip install joblib
 
 Running the project:
 
-	‘python driver.py’
+	python driver.py
 
 User-adjustable variables:
 
