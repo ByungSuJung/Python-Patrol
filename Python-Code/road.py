@@ -12,63 +12,63 @@ Purpose: This file contains the Road class that is responsible for
 import queue as q #Import queueu package
 
 class Road(object):
- """ Class: Road
+    """ Class: Road
     
-        Description:
-        * This class represents a real world road object within
-          our simulation, with simplifying assumptions. The main
-          features of this class along with their descriptions can
-          be seen in the member variables and member methods.
+    Description:
+    * This class represents a real world road object within
+      our simulation, with simplifying assumptions. The main
+      features of this class along with their descriptions can
+      be seen in the member variables and member methods.
 
-        Member Variables:
-        * AVG_CAR_LENGTH - Simplifying assumption of the size of the
-                           cars on all the roads.
+    Member Variables:
+    * AVG_CAR_LENGTH - Simplifying assumption of the size of the
+                       cars on all the roads.
 
-        * ONE_TIME_STEP - The value of what one time step is equal to,
-                          currently set at .8 seconds.
+    * ONE_TIME_STEP - The value of what one time step is equal to,
+                      currently set at .8 seconds.
 
-        * id - The unique identifier given to this specific road to 
-               differentiate it from all other roads.
+    * id - The unique identifier given to this specific road to 
+           differentiate it from all other roads.
 
-        * u - The start intersection of the road.
+    * u - The start intersection of the road.
 
-        * v - The end intersection of the road.
+    * v - The end intersection of the road.
 
-        * max_speed - The maximum speed for the specified road.
+    * max_speed - The maximum speed for the specified road.
 
-        * num_lanes - The number of lanes the specified road has.
+    * num_lanes - The number of lanes the specified road has.
 
-        * length - The length of the specified road.
+    * length - The length of the specified road.
 
-        * queue - Queue of the cars on this road.
+    * queue - Queue of the cars on this road.
 
-        * q_size - Current number of cars on this road.
+    * q_size - Current number of cars on this road.
 
-        Member Methods:
-        * __hash__ - Overwritten functionality of the hash function
-                     to hash the id of each road.
+    Member Methods:
+    * __hash__ - Overwritten functionality of the hash function
+                 to hash the id of each road.
 
-        * __str__ - Overwrittnen functionality of the str function
-                    used to print out the id of each road.
+    * __str__ - Overwrittnen functionality of the str function
+                used to print out the id of each road.
 
-        * calculate_capacity - Calculates the capacity of this road
-                               based off the number of lanes, the length,
-                               the average car length.
+    * calculate_capacity - Calculates the capacity of this road
+                           based off the number of lanes, the length,
+                           the average car length.
 
-        * calculate_time_step - Calculates the number of times steps it
-                                takes to travel the road based off the
-                                length, max speed, and the value of one
-                                time step.
+    * calculate_time_step - Calculates the number of times steps it
+                            takes to travel the road based off the
+                            length, max speed, and the value of one
+                            time step.
 
-        * add - Responsible for adding cars onto the specified queue of the 
-                road and making sure to adjust the size accordingly.
+    * add - Responsible for adding cars onto the specified queue of the 
+            road and making sure to adjust the size accordingly.
 
-        * remove - Responsible for removing cars from the specified queue of the 
-                   road and making sure to adjust the size accordingly.
+    * remove - Responsible for removing cars from the specified queue of the 
+               road and making sure to adjust the size accordingly.
 
-        * run - Makes each car within the queue at on the road attempt to
-                perform their move functionality.
-          """
+    * run - Makes each car within the queue at on the road attempt to
+            perform their move functionality.
+    """
 
     def __init__(self, id, start, destination, max_speed, num_lanes, length):
         # CONSTANTS

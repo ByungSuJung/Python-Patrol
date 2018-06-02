@@ -167,7 +167,7 @@ class Map:
         return edge_dict
 
     def add_edges(self, node_dict, edge_dict):
-            """
+        """
         Method: add_edges
 
         Method Arguments:
@@ -178,7 +178,7 @@ class Map:
         Output:
         * No return value, but the edges will be placed into categories for
           incoming and out going edges of specific nodes.
-          """
+        """
 
         #list of intersection objs
         for n in list(node_dict.values()):
@@ -256,7 +256,7 @@ class Map:
         Output:
         * The return value is a start and destination, this is used to provide
           a trip for a specific car within the map.
-          """
+        """
 
         start = rn.choice(list(node_dict.values()))
         destination = rn.choice(list(node_dict.values()))
