@@ -18,7 +18,7 @@ MODIFIED = False
 
 #Varying Driver parameters
 VISUALIZATION = False
-SINGLE = True
+SINGLE_ SIM = True
 
 car_data = None
 fig, ax = plt.subplots()
@@ -265,8 +265,8 @@ def analysis():
     plt.ylabel("avg ind-time")
     
     plt.show()
-
-analysis()
+if not VISUALIZATION:
+    analysis()
 
 
     
