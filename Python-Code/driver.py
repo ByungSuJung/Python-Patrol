@@ -31,7 +31,7 @@ MODIFIED = False
 
 #Varying Driver parameters
 VISUALIZATION = False
-SINGLE_SIM = True
+SINGLE_SIM = False
 
 car_data = None
 fig, ax = plt.subplots()
@@ -256,7 +256,7 @@ def multi_simulations(maps, visualization=False):
         
 
 #single simulation plotting (int) total_time_steps (list) individual_travel_time
-if SINGLE:
+if SINGLE_SIM:
     single_map=Map(center_lat=CENTER_LATITUDE,center_long=CENTER_LONGITUDE,\
     dist=DISTANCE_FROM_CENTER,num_cars=NUM_CARS,random_init=RANDOM_START_DESTINATION,\
     modified=MODIFIED,traffic_tolerance=TRAFFIC_TOLERANCE)
@@ -349,7 +349,7 @@ def analysis():
     mod_maps = []
     #Varying num cars
     caps_to_test = np.arange(0.1,1.1,0.1) #0.1, 0.2, 0.3...1
-    caps_to_test = np.arange(0.1,1.1,0.5) #0.1, 0.2, 0.3...1
+    #caps_to_test = np.arange(0.1,1.1,0.5) #0.1, 0.2, 0.3...1
 
     for i in car_numbers_to_test:
         print(i)

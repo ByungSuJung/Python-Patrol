@@ -143,27 +143,27 @@ class Car(object):
                     #print("edge to intersection")
                     self.next_to_visit.add(self)
                     self.current_position.remove(self) 
-                    print("current_position:", self.current_position.id)
-                    print("self.destination: ", self.destination.id)
+                    #print("current_position:", self.current_position.id)
+                    #print("self.destination: ", self.destination.id)
                     self.current_position = self.next_to_visit
                     if self.current_position != self.destination:
                         if self.current_position in self.path:
                             temp = self.path.index(self.current_position) + 1
-                            print("temp index = ", temp)
-                            print("length of list = ", len(self.path))
+                            #print("temp index = ", temp)
+                            #print("length of list = ", len(self.path))
                             self.next_to_visit = self.path[temp]
                         else:
-                            print(self.current_position.id)
-                            print(self.path)
+                            #print(self.current_position.id)
+                            #print(self.path)
                             temp = self.path.index(self.current_position) + 1
-                            print("temp index = ", temp)
-                            print("length of list = ", len(self.path))
+                            #print("temp index = ", temp)
+                            #print("length of list = ", len(self.path))
                             self.next_to_visit = self.path[temp]
                     # in the intersection 
                     else: 
-                        print("reached destination")
-                        print("index = ", self.path.index(self.current_position))
-                        print("finished car", self.map.car_map.index(self))
+                        #print("reached destination")
+                        #print("index = ", self.path.index(self.current_position))
+                        #print("finished car", self.map.car_map.index(self))
                         self.current_position.remove(self)
                         self.done = True
                         return True

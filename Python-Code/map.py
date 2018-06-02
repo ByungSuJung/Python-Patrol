@@ -67,21 +67,21 @@ class Map:
     dist=700, num_cars=1000, random_init=True, modified=False, \
     traffic_tolerance=0.75):
 
-        print("mapstart")
+        #print("mapstart")
         self.traffic_tolerance = traffic_tolerance
         self.modified = modified
         self.random_init = random_init
         center_pt = (center_lat, center_long)
-        print("before getting data")
+        #print("before getting data")
         G = ox.graph_from_point(center_pt, distance=dist, network_type='drive') 
-        print("got data")
+        #print("got data")
         self.node_map = self.set_intersections(G) #dictionary of nodes
-        print("set node")
+        #print("set node")
         self.edge_map = self.set_roads(G, self.node_map) #dictionary of edges
-        print("set edge")
+        #print("set edge")
         self.add_edges(self.node_map, self.edge_map) #adds edges to nodes"""
         self.car_map = self.set_cars(G, self.edge_map, self.node_map, num_cars)
-        print("set car")
+        #print("set car")
         node_list = list(self.node_map.values())
         for node in node_list: 
             for car in self.car_map: 
@@ -109,7 +109,7 @@ class Map:
             y = n[1]['y']
             node_to_insert = Intersection(name, x, y, self)
             if name in node_dict: 
-                print("duplicate")
+                #print("duplicate")
                 pass
             else:
                 node_dict[name] = node_to_insert
@@ -160,7 +160,7 @@ class Map:
             edge_to_insert = Road(id, start, destination, max_speed, \
                 num_lanes, length)
             if id in edge_dict: 
-                print("duplicate edge")
+                #print("duplicate edge")
             edge_dict[id] = edge_to_insert
             id+=1
         #removed bad edge
@@ -216,10 +216,10 @@ class Map:
         #path = nx.dijkstra_path(G,start,destination)
         print("passing dest", destination.id)
         success, path = start.shortest_path(destination, modified=False)
-        print(success)
-        print(path)
+        #print(success)
+        #print(path)
         while not success:  
-            print("insde first loop")
+            #print("insde first loop")
             start.reset_nodes()
             start, destination = self.init_trip(node_dict)
             success, path = start.shortest_path(destination, modified=False)
@@ -242,8 +242,8 @@ class Map:
                     start.reset_nodes()
                     success, path = start.shortest_path(destination, modified=False)
 
-                print("success")
-                print(path)
+                #print("success")
+                #print(path)
         return car_list
 
     def init_trip(self, node_dict):
