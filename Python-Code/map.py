@@ -160,7 +160,7 @@ class Map:
             edge_to_insert = Road(id, start, destination, max_speed, \
                 num_lanes, length)
             if id in edge_dict: 
-                #print("duplicate edge")
+                print("duplicate edge")
             edge_dict[id] = edge_to_insert
             id+=1
         #removed bad edge

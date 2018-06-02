@@ -30,8 +30,8 @@ TRAFFIC_TOLERANCE = 0.75
 MODIFIED = False
 
 #Varying Driver parameters
-VISUALIZATION = False
-SINGLE_SIM = False
+VISUALIZATION = True
+#SINGLE_SIM = True
 
 car_data = None
 fig, ax = plt.subplots()
@@ -256,7 +256,7 @@ def multi_simulations(maps, visualization=False):
         
 
 #single simulation plotting (int) total_time_steps (list) individual_travel_time
-if SINGLE_SIM:
+if VISUALIZATION:
     single_map=Map(center_lat=CENTER_LATITUDE,center_long=CENTER_LONGITUDE,\
     dist=DISTANCE_FROM_CENTER,num_cars=NUM_CARS,random_init=RANDOM_START_DESTINATION,\
     modified=MODIFIED,traffic_tolerance=TRAFFIC_TOLERANCE)
@@ -316,13 +316,13 @@ def analysis():
     non_mod_maps = []
     mod_maps = []
     #Varying num cars
-    radii_to_test = np.arange(200,1001,100) #200, 300, 400..1000
+    num_sims = np.arange(11) #200, 300, 400..1000
     #radii_to_test = np.arange(200,1001,100) #200, 300, 400..1000
-
-    for i in car_numbers_to_test:
+    
+    for i in num_sims:
         print(i)
-        non_mod_maps.append(Map(dist=i))
-        mod_maps.append(Map(dist=i, modified=True))
+        non_mod_maps.append(Map())
+        mod_maps.append(Map(modified=True))
 
     #print(len(non_mod_maps))
     #print(len(car_numbers_to_test))
@@ -332,26 +332,26 @@ def analysis():
     print("now displaying figure 3")
     plt.title("Non-mod vs mod: total-time")
     plt.figure(3)
-    plt.plot(radii_to_test, total_time, "-o")
-    plt.plot(radii_to_test , m_total_time, "-o")
-    plt.xlabel("map radius")
+    plt.plot(num_sims, total_time, "-o")
+    plt.plot(num_sims , m_total_time, "-o")
+    plt.xlabel("num sims")
     plt.ylabel("average total time")
 
     print("now displaying figure 4")
     plt.title("Non-mod vs mod: avg ind-time")
     plt.figure(4)
-    plt.plot(radii_to_test, avg_ind_time, "-o")
-    plt.plot(radii_to_test , m_avg_ind_time, "-o")
-    plt.xlabel("map radius")
+    plt.plot(num_sims, avg_ind_time, "-o")
+    plt.plot(num_sims, m_avg_ind_time, "-o")
+    plt.xlabel("num sims")
     plt.ylabel("average ind time")
-
+    
     non_mod_maps = []
     mod_maps = []
     #Varying num cars
     caps_to_test = np.arange(0.1,1.1,0.1) #0.1, 0.2, 0.3...1
     #caps_to_test = np.arange(0.1,1.1,0.5) #0.1, 0.2, 0.3...1
 
-    for i in car_numbers_to_test:
+    for i in caps_to_test:
         print(i)
         non_mod_maps.append(Map(traffic_tolerance=i))
         mod_maps.append(Map(traffic_tolerance=i, modified=True))
