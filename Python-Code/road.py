@@ -1,4 +1,15 @@
-import queue as q
+'''
+#------------------------------------------------------------------------------#
+File: road.py
+Date: April 4th, 2018
+By: Cole, Kris, Sam, And Trece
+
+Purpose: This file contains the Road class that is responsible for 
+         simulating the behaviors of a road in our traffic simulation.
+#------------------------------------------------------------------------------#
+'''
+
+import queue as q #Import queueu package
 
 class Road(object):
  """ Class: Road

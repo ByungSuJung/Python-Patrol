@@ -1,8 +1,20 @@
+'''
+#------------------------------------------------------------------------------#
+File: intersection.py
+Date: April 4th, 2018
+By: Cole, Kris, Sam, And Trece
+
+Purpose: This file contains the Intersection class that is responsible for 
+         simulating the behaviors of a intersection in our traffic simulation.
+#------------------------------------------------------------------------------#
+'''
+
+#------------------Imports Statements-------------------#
 from queue import PriorityQueue
 import numpy as np
 import sys
 import matplotlib.pyplot as plt
-
+#-------------------------------------------------------#
 
 class Intersection(object):
     """ Class: Intersection

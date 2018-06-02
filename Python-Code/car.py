@@ -1,5 +1,18 @@
+'''
+#------------------------------------------------------------------------------#
+File: car.py
+Date: April 4th, 2018
+By: Cole, Kris, Sam, And Trece
+
+Purpose: This file contains the Car class that is responsible for simulating
+         the behaviors of a car in our traffic simulation.
+#------------------------------------------------------------------------------#
+'''
+
+#------------------Imports Statements-------------------#
 from road import Road as road
 from intersection import Intersection as intersection 
+#-------------------------------------------------------#
 	
 class Car(object):
     """ Class: Car

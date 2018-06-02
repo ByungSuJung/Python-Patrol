@@ -1,3 +1,13 @@
+'''
+#------------------------------------------------------------------------------#
+File: constants.py
+Date: April 4th, 2018
+By: Cole, Kris, Sam, And Trece
+
+Purpose: This file holds the constants that will be utilized by other files
+         that are vital to running our traffic simulation.
+#------------------------------------------------------------------------------#
+'''
 
 NODE_TIME_STPES = 2
 AVG_CAR_LENGTH = 4.6

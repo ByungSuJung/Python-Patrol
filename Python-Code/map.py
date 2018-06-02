@@ -1,3 +1,17 @@
+'''
+#------------------------------------------------------------------------------#
+File: map.py
+Date: April 4th, 2018
+By: Cole, Kris, Sam, And Trece
+
+Purpose: This file contains the Map class that is responsible for simulating
+          the behaviors of a map in our traffic simulation. This means the map
+          will be mode up of cars, intersections, and edges which when done
+          correctly will cause traffic to arise.
+#------------------------------------------------------------------------------#
+'''
+
+#------------------Imports Statements-------------------#
 import osmnx as ox
 import networkx as nx 
 import numpy as np
@@ -6,6 +20,7 @@ import constants as c
 from intersection import Intersection
 from road import Road 
 from car import Car
+#-------------------------------------------------------#
 
 class Map:
     """ Class: Map

@@ -1,3 +1,16 @@
+'''
+#------------------------------------------------------------------------------#
+File: driver.py
+Date: April 8th, 2018
+By: Cole, Kris, Sam, And Trece
+
+Purpose: This file contains functions that are used to utilize aspects of our
+         model. This file also does the analysis of the results that come from
+         running our simmulation(s).
+#------------------------------------------------------------------------------#
+'''
+
+#------------------Imports Statements-------------------#
 from map import Map 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -5,6 +18,7 @@ import constants as c
 import numpy as np
 from intersection import Intersection
 from car import Car
+#-------------------------------------------------------#
 
 #Varying Map Parameters:
 CENTER_LATITUDE = 47.608013
@@ -15,23 +29,29 @@ RANDOM_START_DESTINATION = True
 TRAFFIC_TOLERANCE = 0.75 
 MODIFIED = False
 
-
 #Varying Driver parameters
 VISUALIZATION = False
-SINGLE_ SIM = True
+SINGLE_SIM = True
 
 car_data = None
 fig, ax = plt.subplots()
 
 def drawCars(cars,draw=True):
-    '''Plot nodes and edges
-    Args:
-        cars: list, list of all cars
-        draw: bool, draw is only set to be True the first time. \
-                While cars are updating, draw should always be False
-    Return:
-        list of line object, only used for updating graph
-    '''
+    """
+    Method: drawCars
+
+    Method Arguments:
+    * cars - List of cars that will be draw on to the graph to help
+             help visualize the follow of traffic.
+
+    * draw - Flag that determines if the graph of driving cars will
+             be show. draw is only set to be True the first time.
+             While cars are updating, draw should always be False
+
+    Output:
+    * list of line object, only used for updating graph
+    """ 
+
     global car_data
     car_list = np.zeros((len(cars),2))
     it = 0
@@ -56,8 +76,18 @@ def drawCars(cars,draw=True):
         return car_list
 
 def update(cars):
-    '''Updates graph
-    '''
+    """
+    Method: update
+
+    Method Arguments:
+    * cars - List of cars that will be draw on to the graph to help
+             help visualize the follow of traffic.
+
+    Output:
+    * No return values, but the graph will be update with the most recent
+      locations of the cars that should be displayed.
+    """ 
+
     global car_data
     car_list = drawCars(cars,draw=False)
 
@@ -69,13 +99,44 @@ def update(cars):
  
 
 def _init_graph(nodes,edges,cars,text=False):
-    '''Initialize graph with nodes, edgew and cars
-    '''
+    """
+    Method: _init_graph
+
+    Method Arguments:
+    * nodes - List of nodes that will be draw on to the graph to help
+              help visualize the follow of traffic.
+
+    * edges - List of edges that will be draw on to the graph to help
+              help visualize the follow of traffic.
+
+    * cars - List of cars that will be draw on to the graph to help
+             help visualize the follow of traffic.
+
+    Output:
+    * No return values, but the graph will be created in its initial state
+      using the nodes, edges, and cars.
+    """ 
+
     drawMap(nodes,edges)
     drawCars(cars)
 
 
 def drawMap(nodes,edges):
+    """
+    Method: drawMap
+
+    Method Arguments:
+    * nodes - List of nodes that will be draw on to the graph to help
+              help visualize the follow of traffic.
+
+    * edges - List of edges that will be draw on to the graph to help
+              help visualize the follow of traffic.
+
+    Output:
+    * No return values, but the graph will be created in its initial state
+      using the nodes and edges.
+    """ 
+
     if type(nodes) is dict:
         for key, node in nodes.items():
             ax.plot(node.x,node.y,linestyle='none',\
@@ -108,6 +169,17 @@ def drawMap(nodes,edges):
                     linestyle='-',color=c.EDGE_COLOR,linewidth=edge.num_lanes*c.PLOT_EDGE_WIDTH)
 
 def updateStatus(map):
+    """
+    Method: updateStatus
+
+    Method Arguments:
+    * map - The map that contains all the nodes, edges, and cars.
+
+    Output:
+    * Return a list of all the individual travel times for each car
+      that is contained within the map.
+    """ 
+
     individual_travel_time = []
     for car in map.car_map:
         car.update()
@@ -120,6 +192,20 @@ def updateStatus(map):
     return individual_travel_time
 
 def run_simulation(map, visualization=False): 
+    """
+    Method: run_simulation
+
+    Method Arguments:
+    * map - The map that contains all the nodes, edges, and cars.
+
+    * visualization - Flag indicating if the graph will be displayed
+                      or not.
+
+    Output:
+    * Return a list of all the individual travel times for each car
+      that is contained within the map and the total travel time summed.
+    """ 
+
     if visualization:
         _init_graph(map.node_map, map.edge_map, map.car_map)
     individual_travel_time = []
@@ -140,7 +226,22 @@ def run_simulation(map, visualization=False):
     #print("time", total_time)
     return total_time, individual_travel_time
 
-def multi_simulations(maps, visualization=False) : 
+def multi_simulations(maps, visualization=False): 
+    """
+    Method: multi_simulations
+
+    Method Arguments:
+    * map - The map that contains all the nodes, edges, and cars.
+
+    * visualization - Flag indicating if the graph will be displayed
+                      or not.
+
+    Output:
+    * Return a list of all the total travel times for each car
+      that is contained within different maps over multiple simulations
+      and the average individual travel times over the simulations.
+    """ 
+
     total_time_list = []
     avg_individual_time = []
     for m in maps:
@@ -165,6 +266,18 @@ if SINGLE:
 -------------------Start of Analysis-------------------------------------
 """
 def analysis():
+    """
+    Method: analysis
+
+    Method Arguments:
+    * None
+
+    Output:
+    * No return values, this is strictly the analysis portion of the code.
+      This section can/will display graphs and animations that display our
+      traffic simulation(s) and the analytical results of them as well.
+    """ 
+
     non_mod_maps = []
     mod_maps = []
 
@@ -268,6 +381,3 @@ def analysis():
     
 if not VISUALIZATION:
     analysis()
-
-
-    
