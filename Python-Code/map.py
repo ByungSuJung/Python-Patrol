@@ -8,15 +8,46 @@ from road import Road
 from car import Car
 
 class Map:
-	"""
+    """ Class: Map
+    
+    	Description:
+    	* This class represents a real world layout of specified sections
+    	  of the world in our simulation, with simplifying assumptions. 
+    	  The main features of this class along with their descriptions can
+          be seen in the member variables functions and member methods.
 
-	"""
+        Member Variables:
+        * traffic_tolerance - The percentage of capacity met that is considered
+        					  to be traffic.
+
+        * modified - Flag indicating if the map will be running a modified
+        			 version of dijkstra's algorithm or the standard.
+
+        * random_init - Flag indicating if the cars on the map will be
+        				randomly initialized or not.
+
+        * node_map - The list of intersections (nodes) that are on the map.
+
+        * edge_map - The list of roads (edges) that are on the map.
+
+        * car_map - The list of cars that are initialized on the map.
+
+        Member Methods:
+        * set_intersections - 
+
+        * set_roads - 
+
+        * add_edges - 
+
+        * set_cars - 
+
+        * init_trip - 
+    """
+
 	def __init__(self, center_lat=47.608013, center_long=-122.335167, \
 	dist=700, num_cars=1000, random_init=True, modified=False, \
 	traffic_tolerance=0.75):
-		"""
 
-		"""
 		print("mapstart")
 		self.traffic_tolerance = traffic_tolerance
 		self.modified = modified
@@ -39,6 +70,19 @@ class Map:
 					node.add(car)
 	
 	def set_intersections(self, G):
+        """
+        Method: set_intersections
+
+        Method Arguments:
+        * G - The graph of a real section of the world that will be produced
+              from using the osmnx package and the lat and lon provided by the
+              user input.
+
+        Output:
+        * A dictionary of the nodes created will be returned, where each node id
+          is their key.
+        """ 
+
 		node_dict = {}
 		for n in G.nodes(data=True):
 			name = n[1]['osmid']
@@ -53,6 +97,22 @@ class Map:
 		return node_dict
 
 	def set_roads(self, G, node_dict):
+        """
+        Method: set_roads
+
+        Method Arguments:
+        * G - The graph of a real section of the world that will be produced
+              from using the osmnx package and the lat and lon provided by the
+              user input.
+
+        * node_dict - The node dictionary that will be used to show which roads
+          			  are connected to each other.
+
+        Output:
+        * A dictionary of the edges created will be returned, where each edge id
+          is their key.
+        """ 
+
 		edge_dict = {}
 		id = 0
 		for e in G.edges(data=True):
@@ -88,6 +148,19 @@ class Map:
 		return edge_dict
 
 	def add_edges(self, node_dict, edge_dict):
+	        """
+        Method: add_edges
+
+        Method Arguments:
+        * node_dict - Dictionary of nodes that are contained within the map.
+
+        * edge_dict - Dictionary of edges that are contained within the map.
+
+        Output:
+        * No return value, but the edges will be placed into categories for
+          incoming and out going edges of specific nodes.
+          """
+
 		for n in list(node_dict.values()): #list of intersection objs
 			for e in list(edge_dict.values()): #list of road objs
 				if e.u == n: #outgoing edge
@@ -97,6 +170,25 @@ class Map:
 					
 
 	def set_cars(self, G, edge_dict, node_dict, num_cars):
+	    """
+        Method: set_cars
+
+        Method Arguments:
+        * G - The graph of a real section of the world that will be produced
+              from using the osmnx package and the lat and lon provided by the
+              user input.
+
+        * node_dict - Dictionary of nodes that are contained within the map.
+
+        * edge_dict - Dictionary of edges that are contained within the map.
+
+        * nums_cars - The number of cars that will be places on this map.
+
+        Output:
+        * No return value, but the provided number of cars will be created
+          and placed within the list of cars for the map.
+          """
+
 		start, destination = self.init_trip(node_dict)
 		#start = node_dict[53213414]
 		#destination = node_dict[53144260]
@@ -133,7 +225,18 @@ class Map:
 				print(path)
 		return car_list
 
-	def init_trip(self, node_dict): 
+	def init_trip(self, node_dict):
+	    """
+        Method: init_trip
+
+        Method Arguments:
+        * node_dict - Dictionary of nodes that are contained within the map.
+
+        Output:
+        * The return value is a start and destination, this is used to provide
+          a trip for a specific car within the map.
+          """
+
 		start = rn.choice(list(node_dict.values()))
 		destination = rn.choice(list(node_dict.values()))
 		while start == destination: 
