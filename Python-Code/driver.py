@@ -265,6 +265,7 @@ def analysis():
     plt.ylabel("avg ind-time")
     
     plt.show()
+    
 if not VISUALIZATION:
     analysis()
 
