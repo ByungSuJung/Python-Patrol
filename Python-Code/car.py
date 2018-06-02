@@ -2,22 +2,79 @@ from road import Road as road
 from intersection import Intersection as intersection 
 	
 class Car(object):
-    def __init__(self, start, destination, map=None, path=None, modified=False, traffic_tolerance=0.75):
-        self.TRAFFIC_TOLERANCE = traffic_tolerance
+    """ Class: Car
+        
+        Description:
+        * This class represents a real world car object within
+          our simulation, with simplifying assumptions. The
+          main features of this class along with their descriptions 
+          can be seen in the member variables functions and member methods.
 
-        self.map = map
-        self.current_position = start
-        self.destination = destination 
-        self.ts_on_current_position = 0
-        self.total_times_for_car = 0
-        self.path = path # list of nodes from start to destination
-        self.next_to_visit = path[1]
-        #print("___this is the cars initial path___", self.path)
-        self.visited = False
-        self.done = False
-        self.modified = modified
+        Member Variables:
+        * map - The realworld map that the car we be performing its actions on.
+
+        * current_position - Initial location of the car on the map.
+
+        * destination - Destination that the car is attempting to reach on the map.
+
+        * path - The current path that the car is told to travel, this can be
+                 provided by the regular or modified dijkstra's algorithm.
+
+        * next_to_vist - The list of nodes and edges that the car is going to be
+                         visiting next. This is different from the path b/c the
+                         path strictly provides the nodes and no edges.
+
+        * visited - This is an indicator for if the car has performed an action
+                    during the time step, meaning it is a flag that shows if the
+                    car has moved or is stuck in traffic.
+
+        * done - A flag that indicates when the car has reached its destination.
+
+        * modified - Used to represent if a car will be running regular or the 
+                     modified version of dijkstra's.
+
+        Member Methods:
+        * update - Updates the specific car, if it has not performed any actions
+                   in that time step.
+
+        * move - If the car is able to move, provided that there is no traffic,
+
+        * try_move_from_node - Determines if moving from the node to an edge is
+                               possible.
+
+        * try_move_from_edge - Determines if moving from the edge to a node is
+                               possible.
+
+        * find_shortest_path - Determines if the car is using normal or modified
+                               dijkstra's then get the shortest path from current
+                               position to the destination.
+    """
+
+    def __init__(self, start, destination, map=None, path=None, modified=False, traffic_tolerance=0.75):
+        self.TRAFFIC_TOLERANCE = traffic_tolerance #Capacity percent that is considered traffic
+        self.map = map #The realworld map that the car we be performing its actions on
+        self.current_position = start #Initial location of the car
+        self.destination = destination #Desired destinaiton of the car
+        self.ts_on_current_position = 0 #How long it's been on the road or at an intersection
+        self.total_times_for_car = 0 #Keeps track of how long the car has been traveling
+        self.path = path #list of nodes from start to destination
+        self.next_to_visit = path[1] #The path that the car is supposed to follow
+        self.visited = False #If the car has performed an action during a time step
+        self.done = False #If the car has reached its destination
+        self.modified = modified #If it should be using modified dijkstra
     
-    def update(self): 
+    def update(self):
+        """
+        Method: update
+
+        Method Arguments:
+        * None
+
+        Output:
+        * Nothing will be returned but the car will begin to attempt to either move
+          or remain stuck in traffic.
+        """ 
+
         if self.visited: 
             pass
         else: 
@@ -25,6 +82,18 @@ class Car(object):
 
     # move for normal and modified dijkstra 
     def move(self):
+        """
+        Method: move
+
+        Method Arguments:
+        * None
+
+        Output:
+        * Nothing will be returned but the car will begin to attempt to either move
+          or remain stuck in traffic, the actions for it's path will also be determined
+          by either normal or modified dijkstra's.
+        """ 
+
         if self.visited:
             return False
         if self.ts_on_current_position == self.current_position.time_steps: 
@@ -94,6 +163,18 @@ class Car(object):
         return False
             
     def try_move_from_node(self):
+        """
+        Method: try_move_from_node
+
+        Method Arguments:
+        * None
+
+        Output:
+        * Nothing will be returned but the car will determine if it is considered
+          to be in traffic or if it is not in traffic, if it is not in traffic
+          it will determine it's new shortest path.
+        """ 
+
         if self.modified: 
             temp_value = self.next_to_visit.q_size / self.next_to_visit.capacity
             if temp_value > self.TRAFFIC_TOLERANCE:
@@ -104,9 +185,32 @@ class Car(object):
         return self.try_move_from_edge()
     
     def try_move_from_edge(self):
+        """
+        Method: try_move_from_edge
+
+        Method Arguments:
+        * None
+
+        Output:
+        * Nothing will be returned but the car will determine if it is considered
+          to be in traffic or if it is not in traffic, if it is not in traffic
+          it will continue to travel along the road.
+        """ 
+
         return self.next_to_visit.q_size < self.next_to_visit.capacity
 
-    def find_shortest_path(self): 
+    def find_shortest_path(self):
+        """
+        Method: find_shortest_path
+        
+        Method Arguments:
+        * None
+
+        Output:
+        * Nothing will be returned but the car will determine its new shortest
+          path and adjust as needed.
+        """
+     
         # modified dijsktra
         if self.current_position != self.path[0]:
             self.current_position.reset_nodes()
