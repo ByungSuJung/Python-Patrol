@@ -199,7 +199,7 @@ def analysis():
     plt.xlabel("number of cars")
     plt.ylabel("avg in time")
     
-    """
+    
     non_mod_maps = []
     mod_maps = []
     #Varying num cars
@@ -263,7 +263,7 @@ def analysis():
     plt.plot(caps_to_test , m_avg_ind_time, "-o")
     plt.xlabel("traffic tolerance")
     plt.ylabel("avg ind-time")
-    """
+    
     plt.show()
 
 analysis()
