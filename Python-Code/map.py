@@ -14,7 +14,7 @@ class Map:
     	* This class represents a real world layout of specified sections
     	  of the world in our simulation, with simplifying assumptions. 
     	  The main features of this class along with their descriptions can
-          be seen in the member variables functions and member methods.
+          be seen in the member variables and member methods.
 
         Member Variables:
         * traffic_tolerance - The percentage of capacity met that is considered
@@ -33,15 +33,19 @@ class Map:
         * car_map - The list of cars that are initialized on the map.
 
         Member Methods:
-        * set_intersections - 
+        * set_intersections - Responsible for adding intersections to
+        					  this specific map.
 
-        * set_roads - 
+        * set_roads - Responsible for adding roads to this specific map.
 
-        * add_edges - 
+        * add_edges - Determines for each edge if they are incoming or out
+        			  going edges for specific nodes.
 
-        * set_cars - 
+        * set_cars - Creates a certain amount of cars that will be placed
+        			 on the map at some location.
 
-        * init_trip - 
+        * init_trip - For each car in the map it gives them a starting
+        			  and ending location.
     """
 
 	def __init__(self, center_lat=47.608013, center_long=-122.335167, \

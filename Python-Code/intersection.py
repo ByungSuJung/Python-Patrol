@@ -11,7 +11,7 @@ class Intersection(object):
     	* This class represents a real world intersection object within
           our simulation, with simplifying assumptions. The main
           features of this class along with their descriptions can
-          be seen in the member variables functions and member methods.
+          be seen in the member variables and member methods.
 
         Member Variables:
         * map - The realworld map that the car we be performing its actions on.
